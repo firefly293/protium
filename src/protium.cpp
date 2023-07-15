@@ -28,7 +28,7 @@ namespace protium {
 		WORD NULLPTR = 0xFFFF;
 #endif
 
-		// private classes
+		// private CPU data classes
 #ifdef REGION
 	private:
 		/// <summary>
@@ -46,8 +46,12 @@ namespace protium {
 			static WORD BP; // base pointer
 			static QWORD IR; // instruction register
 			static WORD AR; // allocation register
+			static BYTE flags; // flags register
 		};
+#endif
 
+		// private readability classes
+#ifdef REGION
 		/// <summary>
 		/// contains register IDs
 		/// </summary>
@@ -63,6 +67,108 @@ namespace protium {
 			static const BYTE SP = 7;
 			static const BYTE BP = 8;
 		};
+
+		class op {
+			// CPU functions
+			static const BYTE HLT = 0x00;
+			static const BYTE NOP = 0x01;
+			// flag functions
+			static const BYTE CLRF = 0x02;
+			static const BYTE SETZ = 0x03;
+			static const BYTE SETS = 0x04;
+			static const BYTE SETC = 0x05;
+			static const BYTE SETO = 0x06;
+			static const BYTE UNSZ = 0x07;
+			static const BYTE UNSS = 0x08;
+			static const BYTE UNSC = 0x09;
+			static const BYTE UNSO = 0x0A;
+			// memory functions
+			static const BYTE CLR = 0x10;
+			static const BYTE CP = 0x11;
+			static const BYTE LDA = 0x12;
+			static const BYTE LDB = 0x13;
+			static const BYTE LDC = 0x14;
+			static const BYTE STOA = 0x15;
+			static const BYTE STOB = 0x16;
+			static const BYTE STOC = 0x17;
+			// general register functions
+			static const BYTE MOV = 0x20;
+			static const BYTE CLRA = 0x21;
+			static const BYTE CLRB = 0x22;
+			static const BYTE CLRC = 0x23;
+			static const BYTE SETA = 0x24;
+			static const BYTE SETB = 0x25;
+			static const BYTE SETC = 0x26;
+			static const BYTE OFFST = 0x27;
+			static const BYTE DOFFST = 0x28;
+			static const BYTE SWAP = 0x29;
+			// address specific register functions
+			static const BYTE LDSRC = 0x2A;
+			static const BYTE LDDST = 0x2B;
+			static const BYTE STOSRC = 0x2C;
+			static const BYTE STODST = 0x2D;
+			static const BYTE SETSRC = 0x2E;
+			static const BYTE SETDST = 0x2F;
+			// control functions
+			static const BYTE CMP = 0x30;
+			static const BYTE JMP = 0x31;
+			static const BYTE JIZ = 0x32;
+			static const BYTE JNZ = 0x33;
+			static const BYTE JIS = 0x34;
+			static const BYTE JNS = 0x35;
+			static const BYTE JIC = 0x36;
+			static const BYTE JNC = 0x37;
+			static const BYTE JIO = 0x38;
+			static const BYTE JNO = 0x39;
+			static const BYTE JMPR = 0x3A;
+			static const BYTE JIZR = 0x3B;
+			static const BYTE JNZR = 0x3C;
+			static const BYTE JISR = 0x3D;
+			static const BYTE JNSR = 0x3E;
+			static const BYTE JICR = 0x3F;
+			static const BYTE JNCR = 0x40;
+			static const BYTE JIOR = 0x41;
+			static const BYTE JNOR = 0x42;
+			// subroutine functions
+			static const BYTE CALL = 0x43;
+			static const BYTE RET = 0x44;
+			// stack functions
+			static const BYTE PUSH = 0x45;
+			static const BYTE POP = 0x46;
+			static const BYTE TOP = 0x47;
+			// heap functions
+			static const BYTE ALLOC = 0x48;
+			static const BYTE DEALLOC = 0x49;
+			// arithmetic functions
+			static const BYTE ADD = 0x50;
+			static const BYTE SUB = 0x51;
+			static const BYTE MUL = 0x52;
+			static const BYTE DIV = 0x53;
+			static const BYTE MOD = 0x54;
+			static const BYTE INC = 0x55;
+			static const BYTE DEC = 0x56;
+			static const BYTE SHL = 0x57;
+			static const BYTE SHR = 0x58;
+			static const BYTE AND = 0x59;
+			static const BYTE OR = 0x5A;
+			static const BYTE XOR = 0x5B;
+			static const BYTE NOT = 0x5C;
+			static const BYTE BAND = 0x5D;
+			static const BYTE BOR = 0x5E;
+			static const BYTE NEQ = 0x5F;
+			static const BYTE BNOT = 0x60;
+			// input/output
+			static const BYTE ININT = 0x61;
+			static const BYTE INCH = 0x62;
+			static const BYTE INMEM = 0x62;
+			static const BYTE OUTINT = 0x63;
+			static const BYTE OUTCH = 0x64;
+			static const BYTE OUTMEM = 0x65;
+			// debugging functions
+			static const BYTE RDUMP = 0x70;
+			static const BYTE SDUMP = 0x70;
+
+		};
 #endif
 
 
@@ -74,7 +180,8 @@ namespace protium {
 			reg::SRC = reg::DST = NULLPTR;
 			reg::PC = 0x5000;
 			reg::SP = reg::BP = 0x1000;
-
+			reg::IR = 0;
+			reg::AR = 0x1000;
 		}
 
 
