@@ -7,6 +7,7 @@ namespace protium {
 	/// </summary>
 	class CPU {
 		// typedefs
+	public:
 		typedef unsigned char BYTE;
 		typedef unsigned short WORD;
 		typedef int DWORD;
@@ -18,6 +19,7 @@ namespace protium {
 		/// static registers class
 		/// </summary>
 		class reg {
+		public:
 			static DWORD A;
 			static DWORD B;
 			static DWORD C;
@@ -29,6 +31,7 @@ namespace protium {
 		};
 
 		class regID {
+		public:
 			static const BYTE _ = 0;
 			static const BYTE A = 1;
 			static const BYTE B = 2;
@@ -39,6 +42,13 @@ namespace protium {
 			static const BYTE SP = 7;
 			static const BYTE BP = 8;
 		};
+
+
+		// constructor
+	public:
+		CPU() {
+			
+		}
 
 
 	};

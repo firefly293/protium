@@ -1,6 +1,7 @@
 #include <iostream>
+#include "protium.h"
 using namespace std;
 
 int main() {
-	cout << "test";
+	protium::CPU test = protium::CPU();
 }
