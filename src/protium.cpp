@@ -23,13 +23,15 @@ namespace protium {
 		// special pointers
 #ifdef REGION
 	private:
-		/// <summary>
-		/// pointers >= this cannot be written to
-		/// </summary>
-		const WORD UNWRITEABLEPTR = 0xF000;
-		/// <summary>
-		/// used as null pointer
-		/// </summary>
+		const WORD STACK_START = 0x0000;
+		const WORD STACK_END = 0x0FFF;
+		const WORD HEAP_START = 0x1000;
+		const WORD HEAP_END = 0x4FFF;
+		const WORD PRGM_MEM_START = 0x5000;
+		const WORD PRGM_MEM_END = 0x7FFF;
+		const WORD EXTRA_MEM_START = 0x8000;
+		const WORD EXTRA_MEM_END = 0xEFFF;
+		const WORD SYS_MEM_START = 0xF000;
 		const WORD NULLPTR = 0xFFFF;
 #endif
 
@@ -226,7 +228,7 @@ namespace protium {
 			
 			for (int i = 0; i < sizeof(val); i++) {
 				// get each byte in succession and put it in ptr + i
-				if (ptr + i >= UNWRITEABLEPTR) { // make sure ptr is not out of bounds
+				if (ptr + i >= SYS_MEM_START) { // make sure ptr is not out of bounds
 					stringstream msg;
 					msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
 					error(msg.str());
@@ -240,7 +242,7 @@ namespace protium {
 
 			for (int i = 0; i < sizeof(val); i++) {
 				// get each byte in succession and put it in ptr + i
-				if (ptr + i >= UNWRITEABLEPTR) { // make sure ptr is not out of bounds
+				if (ptr + i >= SYS_MEM_START) { // make sure ptr is not out of bounds
 					stringstream msg;
 					msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
 					error(msg.str());
@@ -254,7 +256,7 @@ namespace protium {
 
 			for (int i = 0; i < sizeof(val); i++) {
 				// get each byte in succession and put it in ptr + i
-				if (ptr + i >= UNWRITEABLEPTR) { // make sure ptr is not out of bounds
+				if (ptr + i >= SYS_MEM_START) { // make sure ptr is not out of bounds
 					stringstream msg;
 					msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
 					error(msg.str());
@@ -268,7 +270,7 @@ namespace protium {
 
 			for (int i = 0; i < sizeof(val); i++) {
 				// get each byte in succession and put it in ptr + i
-				if (ptr + i >= UNWRITEABLEPTR) { // make sure ptr is not out of bounds
+				if (ptr + i >= SYS_MEM_START) { // make sure ptr is not out of bounds
 					stringstream msg;
 					msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
 					error(msg.str());
@@ -282,7 +284,7 @@ namespace protium {
 
 			for (int i = 0; i < size; i++) {
 				// get each byte in succession and put it in ptr + i
-				if (ptr + i >= UNWRITEABLEPTR) { // make sure ptr is not out of bounds
+				if (ptr + i >= SYS_MEM_START) { // make sure ptr is not out of bounds
 					stringstream msg;
 					msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
 					error(msg.str());
@@ -449,6 +451,14 @@ namespace protium {
 
 		}
 
+#endif
+
+		// user interaction methods
+#ifdef REGION
+	public:
+		void StoreProgram(WORD ptr, BYTE* program, WORD size) {
+			// iterate over the program and store the bytes one by one
+		}
 #endif
 
 
