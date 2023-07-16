@@ -6,8 +6,6 @@
 #include <unistd.h>
 #endif
 
-
-
 using namespace std;
 
 #define REGION
@@ -539,6 +537,8 @@ namespace protium {
 				}
 
 				load(reg::PC, reg::IR);
+
+				
 			}
 		}
 #endif
