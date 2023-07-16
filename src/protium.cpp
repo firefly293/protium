@@ -218,6 +218,10 @@ namespace protium {
 			}
 		}
 
+		bool checkFlag(FLAGS flag) {
+			return reg::flags & (1 << flag);
+		}
+
 		void sto(WORD ptr, BYTE& val) {
 			
 			for (int i = 0; i < sizeof(val); i++) {
