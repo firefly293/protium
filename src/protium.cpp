@@ -1,5 +1,13 @@
 #include <iostream>
 #include <sstream>
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
+
+
+
 using namespace std;
 
 #define REGION
@@ -187,9 +195,9 @@ namespace protium {
 			C,
 			S,
 			Z,
+			_0,
 			_1,
 			_2,
-			_3,
 			H
 		};
 #endif
@@ -471,6 +479,7 @@ namespace protium {
 				mem[ptr + i] = program[i];
 			}
 		}
+
 		void SetStartingPoint(WORD startingPoint) {
 			if (startingPoint < PRGM_MEM_START || startingPoint > PRGM_MEM_END) {
 				// is out of range
@@ -494,7 +503,7 @@ namespace protium {
 			// init system variables
 			srand(time(NULL));
 			clockTime = 0;
-			updateSysRand();
+			sysRand = 0;
 
 			// clear memory
 			for (int i = 0; i < 0x10000; i++) {
@@ -502,11 +511,9 @@ namespace protium {
 			}
 
 			// set up special pointers
-			stoSys(0xF000, (BYTE*)"PROTIUM", 7);
-			stoSys(0xF007, (BYTE*)" AB", 3);
-			stoSys(0xF00A, (BYTE*)" SYS INFO:", 10);
-			stoSys(0xF014, clockTime);
-			stoSys(0xF01C, sysRand);
+			stoSys(0xF000, (BYTE*)"PROTIUM", 7); // name of CPU
+			stoSys(0xF007, (BYTE*)" AB", 3); // initials
+			stoSys(0xF00A, (BYTE*)" SYS VARS:", 10); // label for system variables
 		}
 #endif
 
