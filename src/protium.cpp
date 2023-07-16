@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 using namespace std;
 
 #define REGION
@@ -22,6 +23,10 @@ namespace protium {
 		// special pointers
 #ifdef REGION
 	private:
+		/// <summary>
+		/// pointers >= this cannot be written to
+		/// </summary>
+		WORD UNWRITEABLEPTR = 0xF000;
 		/// <summary>
 		/// used as null pointer
 		/// </summary>
@@ -52,6 +57,7 @@ namespace protium {
 
 		// private readability classes
 #ifdef REGION
+	private:
 		/// <summary>
 		/// contains register IDs
 		/// </summary>
@@ -171,6 +177,72 @@ namespace protium {
 		};
 #endif
 
+		// private enums
+#ifdef REGION
+	private:
+		const enum FLAGS {
+			O,
+			C,
+			S,
+			Z,
+			_1,
+			_2,
+			_3,
+			H
+		};
+#endif
+
+		// CPU variables
+#ifdef REGION
+	private:
+		BYTE* mem;
+#endif
+
+		// CPU methods
+#ifdef REGION
+	private:
+		void sto(WORD ptr, WORD& val) {
+			// check if it will fit
+			if (ptr + sizeof(val) >= 0xF000) {
+				stringstream msg;
+				msg << "Attempted to store value at 0x" << hex << ptr + sizeof(val) << " on PC 0x" << hex << reg::PC;
+				error(msg.str());
+			}
+			
+			for (int i = 0; i < sizeof(val); i++) {
+				// get each byte in succession and put it in ptr + i
+
+			}
+		}
+
+		void setFlag(FLAGS flag) {
+			if (!(reg::flags & (1 << flag))) {
+				// flag is not set
+				reg::flags ^= 1 << flag;
+			}
+		}
+
+		void unsetFlag(FLAGS flag) {
+			if (reg::flags & (1 << flag)) {
+				// flag is set
+				reg::flags ^= 1 << flag;
+			}
+		}
+
+#endif
+
+		// non-CPU methods
+#ifdef REGION
+	private:
+		void error(string msg) {
+			// output message
+			cout << endl << "ERROR: " << msg;
+			// set halt flag
+			setFlag(FLAGS::H);
+
+		}
+#endif
+
 
 		// constructor
 	public:
@@ -182,6 +254,8 @@ namespace protium {
 			reg::SP = reg::BP = 0x1000;
 			reg::IR = 0;
 			reg::AR = 0x1000;
+			// init memory
+			mem = (BYTE*)malloc(sizeof(BYTE) * 0x10000);
 		}
 
 
