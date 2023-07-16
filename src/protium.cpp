@@ -183,13 +183,14 @@ namespace protium {
 			// input/output
 			static const BYTE ININT = 0x61;
 			static const BYTE INCH = 0x62;
-			static const BYTE INMEM = 0x62;
-			static const BYTE OUTINT = 0x63;
-			static const BYTE OUTCH = 0x64;
-			static const BYTE OUTMEM = 0x65;
+			static const BYTE INMEM = 0x63;
+			static const BYTE OUTINT = 0x64;
+			static const BYTE OUTCH = 0x65;
+			static const BYTE OUTMEM = 0x66;
 			// debugging functions
 			static const BYTE RDUMP = 0x70;
-			static const BYTE SDUMP = 0x70;
+			static const BYTE SDUMP = 0x71;
+			static const BYTE FDUMP = 0x72;
 
 		};
 #endif
