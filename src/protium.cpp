@@ -501,10 +501,10 @@ namespace protium {
 			// init registers
 			reg::A = reg::B = reg::C = 0;
 			reg::SRC = reg::DST = NULLPTR;
-			reg::PC = 0x5000;
-			reg::SP = reg::BP = 0x1000;
+			reg::PC = PRGM_MEM_START;
+			reg::SP = reg::BP = STACK_END + 1;
 			reg::IR = 0;
-			reg::AR = 0x1000;
+			reg::AR = HEAP_START;
 
 			// init system variables
 			srand(time(NULL));
