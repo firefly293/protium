@@ -292,9 +292,79 @@ namespace protium {
 			}
 		}
 
+		void stoSys(WORD ptr, BYTE& val) {
+
+			for (int i = 0; i < sizeof(val); i++) {
+				// get each byte in succession and put it in ptr + i
+				if (ptr + i >= NULLPTR) { // make sure ptr is not out of bounds
+					stringstream msg;
+					msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
+					error(msg.str());
+					return;
+				}
+				mem[ptr + i] = val >> (i * 8);
+			}
+		}
+
+		void stoSys(WORD ptr, WORD& val) {
+
+			for (int i = 0; i < sizeof(val); i++) {
+				// get each byte in succession and put it in ptr + i
+				if (ptr + i >= NULLPTR) { // make sure ptr is not out of bounds
+					stringstream msg;
+					msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
+					error(msg.str());
+					return;
+				}
+				mem[ptr + i] = val >> (i * 8);
+			}
+		}
+
+		void stoSys(WORD ptr, DWORD& val) {
+
+			for (int i = 0; i < sizeof(val); i++) {
+				// get each byte in succession and put it in ptr + i
+				if (ptr + i >= NULLPTR) { // make sure ptr is not out of bounds
+					stringstream msg;
+					msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
+					error(msg.str());
+					return;
+				}
+				mem[ptr + i] = val >> (i * 8);
+			}
+		}
+
+		void stoSys(WORD ptr, QWORD& val) {
+
+			for (int i = 0; i < sizeof(val); i++) {
+				// get each byte in succession and put it in ptr + i
+				if (ptr + i >= NULLPTR) { // make sure ptr is not out of bounds
+					stringstream msg;
+					msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
+					error(msg.str());
+					return;
+				}
+				mem[ptr + i] = val >> (i * 8);
+			}
+		}
+
+		void stoSys(WORD ptr, BYTE* buf, WORD size) {
+
+			for (int i = 0; i < size; i++) {
+				// get each byte in succession and put it in ptr + i
+				if (ptr + i >= NULLPTR) { // make sure ptr is not out of bounds
+					stringstream msg;
+					msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
+					error(msg.str());
+					return;
+				}
+				mem[ptr + i] = buf[i];
+			}
+		}
+
 		void load(WORD ptr, BYTE& to) {
 			for (int i = 0; i < sizeof(to); i++) {
-				if (ptr + i >= 0xFFFF) { // make sure ptr is not out of bounds
+				if (ptr + i >= NULLPTR) { // make sure ptr is not out of bounds
 					stringstream msg;
 					msg << "Attempted to read from 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
 					error(msg.str());
@@ -307,7 +377,7 @@ namespace protium {
 
 		void load(WORD ptr, WORD& to) {
 			for (int i = 0; i < sizeof(to); i++) {
-				if (ptr + i >= 0xFFFF) { // make sure ptr is not out of bounds
+				if (ptr + i >= NULLPTR) { // make sure ptr is not out of bounds
 					stringstream msg;
 					msg << "Attempted to read from 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
 					error(msg.str());
@@ -320,7 +390,7 @@ namespace protium {
 
 		void load(WORD ptr, DWORD& to) {
 			for (int i = 0; i < sizeof(to); i++) {
-				if (ptr + i >= 0xFFFF) { // make sure ptr is not out of bounds
+				if (ptr + i >= NULLPTR) { // make sure ptr is not out of bounds
 					stringstream msg;
 					msg << "Attempted to read from 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
 					error(msg.str());
@@ -333,7 +403,7 @@ namespace protium {
 
 		void load(WORD ptr, QWORD& to) {
 			for (int i = 0; i < sizeof(to); i++) {
-				if (ptr + i >= 0xFFFF) { // make sure ptr is not out of bounds
+				if (ptr + i >= NULLPTR) { // make sure ptr is not out of bounds
 					stringstream msg;
 					msg << "Attempted to read from 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
 					error(msg.str());
@@ -346,7 +416,7 @@ namespace protium {
 
 		void load(WORD ptr, BYTE* buf, WORD size) {
 			for (int i = 0; i < size; i++) {
-				if (ptr + i >= 0xFFFF) { // make sure ptr is not out of bounds
+				if (ptr + i >= NULLPTR) { // make sure ptr is not out of bounds
 					stringstream msg;
 					msg << "Attempted to read from 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
 					error(msg.str());
@@ -378,6 +448,7 @@ namespace protium {
 			setFlag(FLAGS::H);
 
 		}
+
 #endif
 
 
@@ -395,7 +466,7 @@ namespace protium {
 			// init system variables
 			srand(time(NULL));
 			clockTime = 0;
-			sysRand = rand();
+			updateSysRand();
 
 			// init memory
 			mem = (BYTE*)malloc(sizeof(BYTE) * 0x10000);
@@ -403,6 +474,12 @@ namespace protium {
 				mem[i] = 0;
 			}
 			// set up special pointers
+			stoSys(0xF000, (BYTE*)"PROTIUM", 7);
+			stoSys(0xF007, (BYTE*)" AB", 3);
+			stoSys(0xF00A, (BYTE*)" SYS INFO:", 10);
+			stoSys(0xF014, clockTime);
+			stoSys(0xF01C, sysRand);
+			
 		}
 
 
