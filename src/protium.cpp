@@ -92,6 +92,7 @@ namespace protium {
 		};
 
 		class op {
+		public:
 			// CPU functions
 			static const BYTE HLT = 0x00;
 			static const BYTE NOP = 0x01;
@@ -536,9 +537,50 @@ namespace protium {
 					error(msg.str());
 					continue;
 				}
-
 				load(reg::PC, reg::IR);
 
+				// implement every opcode
+				BYTE opcode = reg::IR & 0xFF; // extract lowest byte of IR for opcode
+
+				switch (opcode) {
+					// CPU functions
+				case op::HLT:
+					setFlag(FLAGS::H);
+					break;
+				case op::NOP:
+					continue;
+					break;
+					// flag functions
+				case op::CLRF:
+					reg::flags = 0;
+					break;
+				case op::SETZ:
+					setFlag(FLAGS::Z);
+					break;
+				case op::SETS:
+					setFlag(FLAGS::S);
+					break;
+				case op::SETC:
+					setFlag(FLAGS::C);
+					break;
+				case op::SETO:
+					setFlag(FLAGS::O);
+					break;
+				case op::UNSZ:
+					unsetFlag(FLAGS::Z);
+					break;
+				case op::UNSS:
+					unsetFlag(FLAGS::S);
+					break;
+				case op::UNSC:
+					unsetFlag(FLAGS::C);
+					break;
+				case op::UNSO:
+					unsetFlag(FLAGS::O);
+					break;
+
+
+				}
 				
 			}
 		}
