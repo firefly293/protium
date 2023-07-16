@@ -458,6 +458,28 @@ namespace protium {
 	public:
 		void StoreProgram(WORD ptr, BYTE* program, WORD size) {
 			// iterate over the program and store the bytes one by one
+			for (int i = 0; i < size; i++)
+			{
+				// check if ptr is out of range
+				if (ptr + i < PRGM_MEM_START || ptr + i > PRGM_MEM_END) {
+					// is out of range
+					stringstream msg;
+					msg << "Attempted to write program to 0x" << hex << ptr + i;
+					error(msg.str());
+					return;
+				}
+				mem[ptr + i] = program[i];
+			}
+		}
+		void SetStartingPoint(WORD startingPoint) {
+			if (startingPoint < PRGM_MEM_START || startingPoint > PRGM_MEM_END) {
+				// is out of range
+				stringstream msg;
+				msg << "Invalid starting point 0x" << hex << startingPoint << ", must be from 0x5000 - 0x7FFF";
+				error(msg.str());
+				return;
+			}
+			reg::PC = startingPoint;
 		}
 #endif
 
