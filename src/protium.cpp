@@ -481,12 +481,8 @@ namespace protium {
 			}
 			reg::PC = startingPoint;
 		}
-#endif
 
-
-		// constructor
-	public:
-		CPU() {
+		void Reset() {
 			// init registers
 			reg::A = reg::B = reg::C = 0;
 			reg::SRC = reg::DST = NULLPTR;
@@ -500,18 +496,35 @@ namespace protium {
 			clockTime = 0;
 			updateSysRand();
 
-			// init memory
-			mem = (BYTE*)malloc(sizeof(BYTE) * 0x10000);
+			// clear memory
 			for (int i = 0; i < 0x10000; i++) {
 				mem[i] = 0;
 			}
+
 			// set up special pointers
 			stoSys(0xF000, (BYTE*)"PROTIUM", 7);
 			stoSys(0xF007, (BYTE*)" AB", 3);
 			stoSys(0xF00A, (BYTE*)" SYS INFO:", 10);
 			stoSys(0xF014, clockTime);
 			stoSys(0xF01C, sysRand);
+		}
+#endif
+
+
+		// constructor
+	public:
+		CPU() {
+			// init memory
+			mem = (BYTE*)malloc(sizeof(BYTE) * 0x10000);
+			Reset(); // perform other necessary commands in Reset()
 			
+		}
+
+		// destructor
+	public:
+		~CPU() {
+			// free mem
+			free(mem);
 		}
 
 
