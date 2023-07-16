@@ -63,6 +63,15 @@ namespace protium {
 			static WORD AR; // allocation register
 			static BYTE flags; // flags register
 		};
+
+		/// <summary>
+		/// system variables class
+		/// </summary>
+		class sys {
+		public:
+			static QWORD clockTime;
+			static QWORD sysRand;
+		};
 #endif
 
 		// private readability classes
@@ -206,8 +215,6 @@ namespace protium {
 #ifdef REGION
 	private:
 		BYTE* mem;
-		QWORD clockTime;
-		QWORD sysRand;
 #endif
 
 		// CPU methods
@@ -439,9 +446,9 @@ namespace protium {
 
 		void updateSysRand() {
 			// get 1 byte random at a time, and update each byte of sysRand correspondingly
-			for (int i = 0; i < sizeof(sysRand); i++) {
+			for (int i = 0; i < sizeof(sys::sysRand); i++) {
 				// set the ith byte to masked rand() to ensure each byte is random
-				sysRand = (sysRand & ~(((QWORD)0xFF << (i * 8)))) | ((rand() & 0xFF) << (i * 8));
+				sys::sysRand = (sys::sysRand & ~(((QWORD)0xFF << (i * 8)))) | ((rand() & 0xFF) << (i * 8));
 			}
 
 		}
@@ -502,8 +509,8 @@ namespace protium {
 
 			// init system variables
 			srand(time(NULL));
-			clockTime = 0;
-			sysRand = 0;
+			sys::clockTime = 0;
+			sys::sysRand = 0;
 
 			// clear memory
 			for (int i = 0; i < 0x10000; i++) {
@@ -514,6 +521,25 @@ namespace protium {
 			stoSys(0xF000, (BYTE*)"PROTIUM", 7); // name of CPU
 			stoSys(0xF007, (BYTE*)" AB", 3); // initials
 			stoSys(0xF00A, (BYTE*)" SYS VARS:", 10); // label for system variables
+		}
+
+		void Start() {
+			while (!checkFlag(FLAGS::H)) {
+				// update system variables
+				updateSysRand();
+				stoSys(0xF014, sys::clockTime);
+				stoSys(0xF01C, sys::sysRand);
+
+				// load instruction register
+				if (reg::PC < PRGM_MEM_START || reg::PC > PRGM_MEM_END || reg::PC + 8 > PRGM_MEM_END) {
+					stringstream msg;
+					msg << "Invalid PC at 0x" << hex << reg::PC;
+					error(msg.str());
+					continue;
+				}
+
+				load(reg::PC, reg::IR);
+			}
 		}
 #endif
 
