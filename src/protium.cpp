@@ -12,19 +12,19 @@ using namespace std;
 
 
 namespace protium {
+
+
+
+	// typedefs
+	typedef unsigned char BYTE;
+	typedef unsigned short WORD;
+	typedef int DWORD;
+	typedef unsigned long long int QWORD;
+
 	/// <summary>
 	/// Protium CPU emulator
 	/// </summary>
 	class CPU {
-
-		// typedefs
-#ifdef REGION
-	public:
-		typedef unsigned char BYTE;
-		typedef unsigned short WORD;
-		typedef int DWORD;
-		typedef unsigned long long int QWORD;
-#endif
 
 		// special pointers
 #ifdef REGION
