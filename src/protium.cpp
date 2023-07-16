@@ -26,11 +26,11 @@ namespace protium {
 		/// <summary>
 		/// pointers >= this cannot be written to
 		/// </summary>
-		WORD UNWRITEABLEPTR = 0xF000;
+		const WORD UNWRITEABLEPTR = 0xF000;
 		/// <summary>
 		/// used as null pointer
 		/// </summary>
-		WORD NULLPTR = 0xFFFF;
+		const WORD NULLPTR = 0xFFFF;
 #endif
 
 		// private CPU data classes
@@ -196,18 +196,35 @@ namespace protium {
 #ifdef REGION
 	private:
 		BYTE* mem;
+		QWORD clockTime;
+		QWORD sysRand;
 #endif
 
 		// CPU methods
 #ifdef REGION
 	private:
+
+		void setFlag(FLAGS flag) {
+			if (!(reg::flags & (1 << flag))) {
+				// flag is not set
+				reg::flags ^= 1 << flag;
+			}
+		}
+
+		void unsetFlag(FLAGS flag) {
+			if (reg::flags & (1 << flag)) {
+				// flag is set
+				reg::flags ^= 1 << flag;
+			}
+		}
+
 		void sto(WORD ptr, BYTE& val) {
 			
 			for (int i = 0; i < sizeof(val); i++) {
 				// get each byte in succession and put it in ptr + i
 				if (ptr + i >= UNWRITEABLEPTR) { // make sure ptr is not out of bounds
 					stringstream msg;
-					msg << "Attempted to store value at 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
+					msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
 					error(msg.str());
 					return;
 				}
@@ -221,7 +238,7 @@ namespace protium {
 				// get each byte in succession and put it in ptr + i
 				if (ptr + i >= UNWRITEABLEPTR) { // make sure ptr is not out of bounds
 					stringstream msg;
-					msg << "Attempted to store value at 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
+					msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
 					error(msg.str());
 					return;
 				}
@@ -235,7 +252,7 @@ namespace protium {
 				// get each byte in succession and put it in ptr + i
 				if (ptr + i >= UNWRITEABLEPTR) { // make sure ptr is not out of bounds
 					stringstream msg;
-					msg << "Attempted to store value at 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
+					msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
 					error(msg.str());
 					return;
 				}
@@ -249,7 +266,7 @@ namespace protium {
 				// get each byte in succession and put it in ptr + i
 				if (ptr + i >= UNWRITEABLEPTR) { // make sure ptr is not out of bounds
 					stringstream msg;
-					msg << "Attempted to store value at 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
+					msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
 					error(msg.str());
 					return;
 				}
@@ -263,7 +280,7 @@ namespace protium {
 				// get each byte in succession and put it in ptr + i
 				if (ptr + i >= UNWRITEABLEPTR) { // make sure ptr is not out of bounds
 					stringstream msg;
-					msg << "Attempted to store value at 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
+					msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
 					error(msg.str());
 					return;
 				}
@@ -271,17 +288,68 @@ namespace protium {
 			}
 		}
 
-		void setFlag(FLAGS flag) {
-			if (!(reg::flags & (1 << flag))) {
-				// flag is not set
-				reg::flags ^= 1 << flag;
+		void load(WORD ptr, BYTE& to) {
+			for (int i = 0; i < sizeof(to); i++) {
+				if (ptr + i >= UNWRITEABLEPTR) { // make sure ptr is not out of bounds
+					stringstream msg;
+					msg << "Attempted to read from 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
+					error(msg.str());
+					return;
+				}
+				// set the ith byte to mem[ptr + i]
+				to = (to & ~(((QWORD)0xFF << (i * 8)))) | (mem[ptr + i] << (i * 8));
 			}
 		}
 
-		void unsetFlag(FLAGS flag) {
-			if (reg::flags & (1 << flag)) {
-				// flag is set
-				reg::flags ^= 1 << flag;
+		void load(WORD ptr, WORD& to) {
+			for (int i = 0; i < sizeof(to); i++) {
+				if (ptr + i >= UNWRITEABLEPTR) { // make sure ptr is not out of bounds
+					stringstream msg;
+					msg << "Attempted to read from 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
+					error(msg.str());
+					return;
+				}
+				// set the ith byte to mem[ptr + i]
+				to = (to & ~(((QWORD)0xFF << (i * 8)))) | (mem[ptr + i] << (i * 8));
+			}
+		}
+
+		void load(WORD ptr, DWORD& to) {
+			for (int i = 0; i < sizeof(to); i++) {
+				if (ptr + i >= UNWRITEABLEPTR) { // make sure ptr is not out of bounds
+					stringstream msg;
+					msg << "Attempted to read from 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
+					error(msg.str());
+					return;
+				}
+				// set the ith byte to mem[ptr + i]
+				to = (to & ~(((QWORD)0xFF << (i * 8)))) | (mem[ptr + i] << (i * 8));
+			}
+		}
+
+		void load(WORD ptr, QWORD& to) {
+			for (int i = 0; i < sizeof(to); i++) {
+				if (ptr + i >= UNWRITEABLEPTR) { // make sure ptr is not out of bounds
+					stringstream msg;
+					msg << "Attempted to read from 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
+					error(msg.str());
+					return;
+				}
+				// set the ith byte to mem[ptr + i]
+				to = (to & ~(((QWORD)0xFF << (i * 8)))) | (mem[ptr + i] << (i * 8));
+			}
+		}
+
+		void load(WORD ptr, BYTE* buf, WORD size) {
+			for (int i = 0; i < size; i++) {
+				if (ptr + i >= UNWRITEABLEPTR) { // make sure ptr is not out of bounds
+					stringstream msg;
+					msg << "Attempted to read from 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
+					error(msg.str());
+					return;
+				}
+				// set the ith byte to mem[ptr + i]
+				buf[i] = mem[ptr + i];
 			}
 		}
 
@@ -310,8 +378,18 @@ namespace protium {
 			reg::SP = reg::BP = 0x1000;
 			reg::IR = 0;
 			reg::AR = 0x1000;
+
+			// init system variables
+			srand(time(NULL));
+			clockTime = 0;
+			sysRand = rand();
+
 			// init memory
 			mem = (BYTE*)malloc(sizeof(BYTE) * 0x10000);
+			for (int i = 0; i < 0x10000; i++) {
+				mem[i] = 0;
+			}
+			// set up special pointers
 		}
 
 
