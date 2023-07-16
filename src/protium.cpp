@@ -201,9 +201,9 @@ namespace protium {
 		// CPU methods
 #ifdef REGION
 	private:
-		void sto(WORD ptr, WORD& val) {
+		void sto(WORD ptr, BYTE& val) {
 			// check if it will fit
-			if (ptr + sizeof(val) >= 0xF000) {
+			if (ptr + sizeof(val) - 1 >= 0xF000) {
 				stringstream msg;
 				msg << "Attempted to store value at 0x" << hex << ptr + sizeof(val) << " on PC 0x" << hex << reg::PC;
 				error(msg.str());
@@ -211,7 +211,64 @@ namespace protium {
 			
 			for (int i = 0; i < sizeof(val); i++) {
 				// get each byte in succession and put it in ptr + i
+				mem[ptr + i] = val >> (i * 8);
+			}
+		}
 
+		void sto(WORD ptr, WORD& val) {
+			// check if it will fit
+			if (ptr + sizeof(val) - 1 >= 0xF000) {
+				stringstream msg;
+				msg << "Attempted to store value at 0x" << hex << ptr + sizeof(val) << " on PC 0x" << hex << reg::PC;
+				error(msg.str());
+			}
+
+			for (int i = 0; i < sizeof(val); i++) {
+				// get each byte in succession and put it in ptr + i
+				mem[ptr + i] = val >> (i * 8);
+			}
+		}
+
+		void sto(WORD ptr, DWORD& val) {
+			// check if it will fit
+			if (ptr + sizeof(val) - 1 >= 0xF000) {
+				stringstream msg;
+				msg << "Attempted to store value at 0x" << hex << ptr + sizeof(val) << " on PC 0x" << hex << reg::PC;
+				error(msg.str());
+			}
+
+			for (int i = 0; i < sizeof(val); i++) {
+				// get each byte in succession and put it in ptr + i
+				mem[ptr + i] = val >> (i * 8);
+			}
+		}
+
+		void sto(WORD ptr, QWORD& val) {
+			// check if it will fit
+			if (ptr + sizeof(val) - 1 >= 0xF000) {
+				stringstream msg;
+				msg << "Attempted to store value at 0x" << hex << ptr + sizeof(val) << " on PC 0x" << hex << reg::PC;
+				error(msg.str());
+			}
+
+			for (int i = 0; i < sizeof(val); i++) {
+				// get each byte in succession and put it in ptr + i
+				mem[ptr + i] = val >> (i * 8);
+			}
+		}
+
+		void sto(WORD ptr, BYTE* buf, WORD size) {
+			// check if it will fit
+			if (ptr + size - 1 >= 0xF000) {
+				stringstream msg;
+				msg << "Attempted to store value at 0x" << hex << ptr + size << " on PC 0x" << hex << reg::PC;
+				error(msg.str());
+				return;
+			}
+
+			for (int i = 0; i < size; i++) {
+				// get each byte in succession and put it in ptr + i
+				mem[ptr + i] = buf[i];
 			}
 		}
 
