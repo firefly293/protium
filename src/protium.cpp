@@ -294,7 +294,7 @@ namespace protium {
 
 		void load(WORD ptr, BYTE& to) {
 			for (int i = 0; i < sizeof(to); i++) {
-				if (ptr + i >= UNWRITEABLEPTR) { // make sure ptr is not out of bounds
+				if (ptr + i >= 0xFFFF) { // make sure ptr is not out of bounds
 					stringstream msg;
 					msg << "Attempted to read from 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
 					error(msg.str());
@@ -307,7 +307,7 @@ namespace protium {
 
 		void load(WORD ptr, WORD& to) {
 			for (int i = 0; i < sizeof(to); i++) {
-				if (ptr + i >= UNWRITEABLEPTR) { // make sure ptr is not out of bounds
+				if (ptr + i >= 0xFFFF) { // make sure ptr is not out of bounds
 					stringstream msg;
 					msg << "Attempted to read from 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
 					error(msg.str());
@@ -320,7 +320,7 @@ namespace protium {
 
 		void load(WORD ptr, DWORD& to) {
 			for (int i = 0; i < sizeof(to); i++) {
-				if (ptr + i >= UNWRITEABLEPTR) { // make sure ptr is not out of bounds
+				if (ptr + i >= 0xFFFF) { // make sure ptr is not out of bounds
 					stringstream msg;
 					msg << "Attempted to read from 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
 					error(msg.str());
@@ -333,7 +333,7 @@ namespace protium {
 
 		void load(WORD ptr, QWORD& to) {
 			for (int i = 0; i < sizeof(to); i++) {
-				if (ptr + i >= UNWRITEABLEPTR) { // make sure ptr is not out of bounds
+				if (ptr + i >= 0xFFFF) { // make sure ptr is not out of bounds
 					stringstream msg;
 					msg << "Attempted to read from 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
 					error(msg.str());
@@ -346,7 +346,7 @@ namespace protium {
 
 		void load(WORD ptr, BYTE* buf, WORD size) {
 			for (int i = 0; i < size; i++) {
-				if (ptr + i >= UNWRITEABLEPTR) { // make sure ptr is not out of bounds
+				if (ptr + i >= 0xFFFF) { // make sure ptr is not out of bounds
 					stringstream msg;
 					msg << "Attempted to read from 0x" << hex << ptr + i << " on PC 0x" << hex << reg::PC;
 					error(msg.str());
@@ -355,6 +355,15 @@ namespace protium {
 				// set the ith byte to mem[ptr + i]
 				buf[i] = mem[ptr + i];
 			}
+		}
+
+		void updateSysRand() {
+			// get 1 byte random at a time, and update each byte of sysRand correspondingly
+			for (int i = 0; i < sizeof(sysRand); i++) {
+				// set the ith byte to masked rand() to ensure each byte is random
+				sysRand = (sysRand & ~(((QWORD)0xFF << (i * 8)))) | ((rand() & 0xFF) << (i * 8));
+			}
+
 		}
 
 #endif
