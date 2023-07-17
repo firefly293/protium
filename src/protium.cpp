@@ -578,7 +578,20 @@ namespace protium {
 				case op::UNSO:
 					unsetFlag(FLAGS::O);
 					break;
+					// memory functions
+				case op::CLR:
+					for (int i = 0; i < (WORD)(reg::IR >> 8); i++) { // reg::IR >> 8 is amount
+						if (reg::DST + i >= SYS_MEM_START) break;
+						mem[reg::DST + i] = 0;
+					}
+					break;
+				//case op::CP:
 
+				default:
+					stringstream msg;
+					msg << "Invalid opcode 0x" << hex << opcode;
+					error(msg.str());
+					break;
 
 				}
 				
