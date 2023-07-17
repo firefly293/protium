@@ -245,12 +245,47 @@ void CPU::load(WORD ptr, BYTE* buf, WORD size) {
 	}
 }
 
+void CPU::cpy(WORD dst, WORD src, WORD size) {
+	// check for overflow
+	if (dst + size < dst || src + size < src) {
+		stringstream msg;
+		msg << "Overflow while copying from 0x" << hex << src << " to 0x" << hex << dst << " on PC 0x" << hex << PC;
+		error(msg.str());
+		return;
+	}
+	// check for copying into/from sys memory
+	if (dst + size >= SYS_MEM_START || src + size >= SYS_MEM_START) {
+		stringstream msg;
+		msg << "Attempted to copy from/into system memory on PC 0x" << hex << PC;
+		error(msg.str());
+		return;
+	}
+	// copy
+	memcpy(mem + dst, mem + src, size);
+}
+
+WORD* CPU::getReg(BYTE id) {
+	if (id == regID::A) return &A;
+	if (id == regID::B) return &B;
+	if (id == regID::C) return &C;
+	if (id == regID::SRC) return &SRC;
+	if (id == regID::DST) return &DST;
+	if (id == regID::PC) return &PC;
+	if (id == regID::SP) return &SP;
+	if (id == regID::BP) return &BP;
+
+}
+
 void CPU::updateSysRand() {
 	// get 1 byte random at a time, and update each byte of sysRand correspondingly
 	for (int i = 0; i < sizeof(sysRand); i++) {
 		// set the ith byte to masked rand() to ensure each byte is random
 		sysRand = (sysRand & ~(((QWORD)0xFF << (i * 8)))) | ((rand() & 0xFF) << (i * 8));
 	}
+
+}
+
+void executeInstruction() {
 
 }
 
@@ -344,61 +379,9 @@ void CPU::Start() {
 		}
 		load(PC, IR);
 
-		// implement every opcode
-		BYTE opcode = IR & 0xFF; // extract lowest byte of IR for opcode
+		executeInstruction();
 
-		switch (opcode) {
-			// CPU functions
-		case op::HLT:
-			setFlag(FLAGS::HF);
-			break;
-		case op::NOP:
-			continue;
-			break;
-			// flag functions
-		case op::CLRF:
-			flags = 0;
-			break;
-		case op::SETZF:
-			setFlag(FLAGS::ZF);
-			break;
-		case op::SETSF:
-			setFlag(FLAGS::SF);
-			break;
-		case op::SETCF:
-			setFlag(FLAGS::CF);
-			break;
-		case op::SETOF:
-			setFlag(FLAGS::OF);
-			break;
-		case op::UNSZF:
-			unsetFlag(FLAGS::ZF);
-			break;
-		case op::UNSSF:
-			unsetFlag(FLAGS::SF);
-			break;
-		case op::UNSCF:
-			unsetFlag(FLAGS::CF);
-			break;
-		case op::UNSOF:
-			unsetFlag(FLAGS::OF);
-			break;
-			// memory functions
-		case op::CLR:
-			for (int i = 0; i < (WORD)(IR >> 8); i++) { // IR >> 8 is amount
-				if (DST + i >= SYS_MEM_START) break;
-				mem[DST + i] = 0;
-			}
-			break;
-		//case op::CP:
-
-		default:
-			stringstream msg;
-			msg << "Invalid opcode 0x" << hex << opcode;
-			error(msg.str());
-			break;
-
-		}
+		clockTime++;
 				
 	}
 }

@@ -23,9 +23,9 @@ private:
 	const WORD SYS_MEM_START = 0xF000;
 	const WORD NULLPTR = 0xFFFF;
 
-	DWORD A; // reg A
-	DWORD B; // reg B
-	DWORD C; // reg C
+	WORD A; // reg A
+	WORD B; // reg B
+	WORD C; // reg C
 	WORD SRC; // reg SRC
 	WORD DST; // reg DST
 	WORD PC; // program counter
@@ -90,15 +90,14 @@ public:
 		static const BYTE SETB = 0x25;
 		static const BYTE SETC = 0x26;
 		static const BYTE OFFST = 0x27;
-		static const BYTE DOFFST = 0x28;
-		static const BYTE SWAP = 0x29;
+		static const BYTE SWAP = 0x28;
 		// address specific register functions
-		static const BYTE LDSRC = 0x2A;
-		static const BYTE LDDST = 0x2B;
-		static const BYTE STOSRC = 0x2C;
-		static const BYTE STODST = 0x2D;
-		static const BYTE SETSRC = 0x2E;
-		static const BYTE SETDST = 0x2F;
+		static const BYTE LDSRC = 0x29;
+		static const BYTE LDDST = 0x2A;
+		static const BYTE STOSRC = 0x2B;
+		static const BYTE STODST = 0x2C;
+		static const BYTE SETSRC = 0x2D;
+		static const BYTE SETDST = 0x2E;
 		// control functions
 		static const BYTE CMP = 0x30;
 		static const BYTE JMP = 0x31;
@@ -194,7 +193,12 @@ public:
 	void load(WORD ptr, DWORD& to);
 	void load(WORD ptr, QWORD& to);
 	void load(WORD ptr, BYTE* buf, WORD size);
+	void cpy(WORD dst, WORD src, WORD size);
+	WORD* getReg(BYTE id);
 	void updateSysRand();
+
+	void executeInstruction();
+
 	void error(string msg);
 
 public:
