@@ -3,5 +3,6 @@
 using namespace std;
 
 int main() {
-	protium::CPU test = protium::CPU();
+	CPU obj;
+	obj.Reset();
 }
