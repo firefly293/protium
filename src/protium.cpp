@@ -228,7 +228,7 @@ void CPU::load(WORD ptr, QWORD& to) {
 			return;
 		}
 		// set the ith byte to mem[ptr + i]
-		to = (to & ~(((QWORD)0xFF << (i * 8)))) | (mem[ptr + i] << (i * 8));
+		to = (to & ~((QWORD)0xFF << (i * 8))) | ((QWORD)mem[ptr + i] << (i * 8));
 	}
 }
 
@@ -1183,6 +1183,9 @@ void CPU::Start() {
 		updateSysRand();
 		stoSys(0xF014, clockTime);
 		stoSys(0xF01C, sysRand);
+		
+		// set _ to 0
+		_ = 0;
 
 		// load instruction register
 		if (PC < PRGM_MEM_START || PC > PRGM_MEM_END || PC > PRGM_MEM_END - 8) {

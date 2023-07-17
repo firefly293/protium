@@ -23,6 +23,7 @@ private:
 	const WORD SYS_MEM_START = 0xF000;
 	const WORD NULLPTR = 0xFFFF;
 
+	WORD _;
 	WORD A; // reg A
 	WORD B; // reg B
 	WORD C; // reg C
