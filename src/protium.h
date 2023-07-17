@@ -151,8 +151,9 @@ public:
 		static const BYTE INCH = 0x62;
 		static const BYTE INMEM = 0x63;
 		static const BYTE OUTINT = 0x64;
-		static const BYTE OUTCH = 0x65;
-		static const BYTE OUTMEM = 0x66;
+		static const BYTE OUTINTS = 0x65;
+		static const BYTE OUTCH = 0x66;
+		static const BYTE OUTMEM = 0x67;
 		// debugging functions
 		static const BYTE RDUMP = 0x70;
 		static const BYTE SDUMP = 0x71;
@@ -195,6 +196,8 @@ public:
 	void load(WORD ptr, BYTE* buf, WORD size);
 	void cpy(WORD dst, WORD src, WORD size);
 	WORD* getReg(BYTE id);
+	void updateFlags(WORD a, WORD b, WORD result);
+	void updateFlags(WORD result);
 	void updateSysRand();
 
 	void executeInstruction();
