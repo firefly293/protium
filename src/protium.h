@@ -39,8 +39,9 @@ private:
 	QWORD clockTime;
 	QWORD sysRand;
 
-	// private readability classes
+	// readability classes
 #ifdef REGION
+public:
 /// <summary>
 /// contains register IDs
 /// </summary>
@@ -172,6 +173,7 @@ public:
 		_2F,
 		HF
 	};
+private:
 
 	BYTE* mem;
 

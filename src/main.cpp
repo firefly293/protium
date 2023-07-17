@@ -4,4 +4,8 @@ using namespace std;
 
 int main() {
 	CPU protium;
+
+	BYTE program[] = {
+
+	}
 }
