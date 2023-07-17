@@ -194,6 +194,12 @@ public:
 	void load(WORD ptr, DWORD& to);
 	void load(WORD ptr, QWORD& to);
 	void load(WORD ptr, BYTE* buf, WORD size);
+	void push(WORD val);
+	void push(DWORD val);
+	void push(QWORD val);
+	void pop(WORD& to);
+	void pop(DWORD& to);
+	void pop(QWORD& to);
 	void cpy(WORD dst, WORD src, WORD size);
 	WORD* getReg(BYTE id);
 	void updateFlags(WORD a, WORD b, WORD result);
