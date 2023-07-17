@@ -3,6 +3,5 @@
 using namespace std;
 
 int main() {
-	CPU obj;
-	obj.Reset();
+	CPU protium;
 }

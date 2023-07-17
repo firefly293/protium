@@ -285,8 +285,182 @@ void CPU::updateSysRand() {
 
 }
 
-void executeInstruction() {
+void CPU::executeInstruction() {
+	// implement every opcode
+	BYTE opcode = IR & 0xFF; // extract lowest byte of IR for opcode
 
+	switch (opcode) {
+		// CPU functions
+	case op::HLT:
+		setFlag(FLAGS::HF);
+		PC++;
+		break;
+	case op::NOP:
+		PC++;
+		return;
+		break;
+		// flag functions
+	case op::CLRF:
+		flags = 0;
+		PC++;
+		break;
+	case op::SETZF:
+		setFlag(FLAGS::ZF);
+		PC++;
+		break;
+	case op::SETSF:
+		setFlag(FLAGS::SF);
+		PC++;
+		break;
+	case op::SETCF:
+		setFlag(FLAGS::CF);
+		PC++;
+		break;
+	case op::SETOF:
+		setFlag(FLAGS::OF);
+		PC++;
+		break;
+	case op::UNSZF:
+		unsetFlag(FLAGS::ZF);
+		PC++;
+		break;
+	case op::UNSSF:
+		unsetFlag(FLAGS::SF);
+		PC++;
+		break;
+	case op::UNSCF:
+		unsetFlag(FLAGS::CF);
+		PC++;
+		break;
+	case op::UNSOF:
+		unsetFlag(FLAGS::OF);
+		PC++;
+		break;
+		// memory functions
+	case op::CLR:
+		for (int i = 0; i < (WORD)(IR >> 8); i++) { // IR >> 8 is amount
+			if (DST + i >= SYS_MEM_START) break;
+			mem[DST + i] = 0;
+		}
+		PC += 3;
+		break;
+	case op::CP:
+		cpy(DST, SRC, (WORD)(IR >> 8));
+		PC += 3;
+		break;
+	case op::LDA:
+		load(SRC, A);
+		PC++;
+		break;
+	case op::LDB:
+		load(SRC, B);
+		PC++;
+		break;
+	case op::LDC:
+		load(SRC, C);
+		PC++;
+		break;
+	case op::STOA:
+		sto(DST, A);
+		PC++;
+		break;
+	case op::STOB:
+		sto(DST, B);
+		PC++;
+		break;
+	case op::STOC:
+		sto(DST, C);
+		PC++;
+		break;
+		// general register functions
+	case op::MOV:
+		{WORD* dstreg = getReg(IR >> 8);
+		WORD* srcreg = getReg(IR >> 16);
+		*dstreg = *srcreg;}
+		PC += 3;
+		break;
+	case op::CLRA:
+		A = 0;
+		PC++;
+		break;
+	case op::CLRB:
+		B = 0;
+		PC++;
+		break;
+	case op::CLRC:
+		C = 0;
+		PC++;
+		break;
+	case op::SETA:
+		A = (WORD)(IR >> 8);
+		PC += 3;
+		break;
+	case op::SETB:
+		B = (WORD)(IR >> 8);
+		PC += 3;
+		break;
+	case op::SETC:
+		C = (WORD)(IR >> 8);
+		PC += 3;
+		break;
+	case op::OFFST:
+		if ((BYTE)(IR >> 8)) {
+			// forwards
+			WORD* reg = getReg(IR >> 16);
+			WORD* basereg = getReg(IR >> 24);
+			*reg = *basereg + (WORD)(IR >> 32);
+		}
+		else {
+			// backwards
+			WORD* reg = getReg(IR >> 16);
+			WORD* basereg = getReg(IR >> 24);
+			*reg = *basereg - (WORD)(IR >> 32);
+		}
+		PC += 6;
+		break;
+	case op::SWAP:
+		{WORD* reg1 = getReg(IR >> 8);
+		WORD* reg2 = getReg(IR >> 16);
+		WORD tmp;
+		tmp = *reg1;
+		*reg1 = *reg2;
+		*reg2 = tmp;
+		}
+		PC += 3;
+		break;
+		// address specific register functions
+	case op::LDSRC:
+		load((WORD)(IR >> 8), SRC);
+		PC += 3;
+		break;
+	case op::LDDST:
+		load((WORD)(IR >> 8), DST);
+		PC += 3;
+		break;
+	case op::STOSRC:
+		sto((WORD)(IR >> 8), SRC);
+		PC += 3;
+		break;
+	case op::STODST:
+		sto((WORD)(IR >> 8), DST);
+		PC += 3;
+		break;
+	case op::SETSRC:
+		SRC = IR >> 8;
+		PC += 3;
+		break;
+	case op::SETDST:
+		DST = IR >> 8;
+		PC += 3;
+		break;
+
+	default:
+		stringstream msg;
+		msg << "Invalid opcode 0x" << hex << opcode;
+		error(msg.str());
+		break;
+
+	}
 }
 
 #endif
