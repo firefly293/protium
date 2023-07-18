@@ -1,11 +1,11 @@
 # Instruction set for the Protium CPU
 
 ### CPU FUNCTIONS
-
+```
 0x00 : hlt // stops the cycles by setting H flag
 
 0x01 : nop // skips a cycle
-
+```
 ### FLAG FUNCTIONS
 
 0x02 : clrf // clears all the flags
