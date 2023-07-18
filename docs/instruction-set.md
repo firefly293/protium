@@ -18,11 +18,12 @@
   * If the sign bit is set, the sign flag (SF) is set.
   * If the result has a signed overflow, the overflow flag (OF) is set.
   * If the result has a carry out, the carry flag (CF) is set.
-  
+
+## Instructions:
 
 ### CPU FUNCTIONS
 ```
-0x00 : hlt // stops the cycles by setting H flag
+0x00 : hlt // stops the cycles by setting HF flag
 
 0x01 : nop // skips a cycle
 ```
@@ -30,21 +31,21 @@
 ```
 0x02 : clrf // clears all the flags
 
-0x03 : setzf // sets Z
+0x03 : setzf // sets ZF
 
-0x04 : setsf // sets S
+0x04 : setsf // sets SF
 
-0x05 : setcf // sets C
+0x05 : setcf // sets CF
 
-0x06 : setof // sets O
+0x06 : setof // sets OF
 
-0x07 : unszf // unsets Z
+0x07 : unszf // unsets ZF
 
-0x08 : unssf // unsets S
+0x08 : unssf // unsets SF
 
-0x09 : unscf // unsets C
+0x09 : unscf // unsets CF
 
-0x0A : unsof // unsets O
+0x0A : unsof // unsets OF
 ```
 ### MEMORY FUNCTIONS
 ```
