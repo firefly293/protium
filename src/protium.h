@@ -155,7 +155,8 @@ public:
 		static const BYTE OUTINT = 0x64;
 		static const BYTE OUTINTS = 0x65;
 		static const BYTE OUTCH = 0x66;
-		static const BYTE OUTMEM = 0x67;
+		static const BYTE OUTIM = 0x67;
+		static const BYTE OUTMEM = 0x68;
 		// debugging functions
 		static const BYTE RDUMP = 0x70;
 		static const BYTE SDUMP = 0x71;

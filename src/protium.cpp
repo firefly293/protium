@@ -1054,6 +1054,10 @@ void CPU::executeInstruction() {
 		cout << (char)(*(getReg(IR >> 8)));
 		PC += 2;
 		break;
+	case op::OUTIM:
+		cout << (char)(IR >> 8);
+		PC += 2;
+		break;
 	case op::OUTMEM:
 		{
 		BYTE amount = IR >> 8;

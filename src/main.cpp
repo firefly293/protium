@@ -26,7 +26,25 @@ int main() {
 		CPU::op::RET // returns from subroutine, answer is stored in A
 	};
 
-	protium.StoreProgram(0x5000, factorialProgram, sizeof(factorialProgram));
+	// test overflow flag
+	BYTE testOverflowProgram[] = {
+		CPU::op::SETA, 0x40, 0x9C, // set a to 40,000
+		CPU::op::MOV, CPU::regID::B, CPU::regID::A, // set b to 40,000
+		CPU::op::ADD, CPU::regID::C, CPU::regID::A, CPU::regID::B, // C = a + b
+		CPU::op::OUTINT, CPU::regID::C, // output result
+		CPU::op::OUTIM, '\n',
+		CPU::op::JNOR, 0x0B, 0x00, 0x00, 0x00, // if not overflow, jump to not overflow print
+		// is overflow
+		CPU::op::SETC, 0x01, 0x00, // if overflow, set C to 1
+		CPU::op::OUTINT, CPU::regID::C, // output C
+		CPU::op::HLT, // halt after outputting C
+		// not overflow
+		CPU::op::CLRC, // set c to 0
+		CPU::op::OUTINT, CPU::regID::C, // output C
+		CPU::op::HLT // halt
+	};
+
+	protium.StoreProgram(0x5000, testOverflowProgram, sizeof(testOverflowProgram));
 	protium.SetStartingPoint(0x5000);
 	protium.Start();
 }
