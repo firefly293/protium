@@ -160,7 +160,7 @@
 0x49 : dealloc [reg] // deallocates the amount by decrementing allocation pointer by amount, if not enough is already allocated, deallocates everything
 ```
 ### ARITHMETIC FUNCTIONS
-```cpp
+```java
 0x50 : add [dstreg] [reg1] [reg2] // adds reg1 and reg2 and puts the result in dstreg
 
 0x51 : sub [dstreg] [reg1] [reg2] // subtracts reg1 and reg2 and puts the result in dstreg
