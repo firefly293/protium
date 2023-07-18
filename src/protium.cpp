@@ -247,7 +247,7 @@ void CPU::load(WORD ptr, BYTE* buf, WORD size) {
 
 void CPU::push(WORD val) {
 	// check for stack overflow
-	if (SP - sizeof(val) > STACK_END) {
+	if (SP - sizeof(val) > STACK_END + 1) {
 		// stack overflow
 		stringstream msg;
 		msg << "Stack overflow on PC 0x" << hex << PC;
@@ -260,7 +260,7 @@ void CPU::push(WORD val) {
 
 void CPU::push(DWORD val) {
 	// check for stack overflow
-	if (SP - sizeof(val) > STACK_END) {
+	if (SP - sizeof(val) > STACK_END + 1) {
 		// stack overflow
 		stringstream msg;
 		msg << "Stack overflow on PC 0x" << hex << PC;
@@ -273,7 +273,7 @@ void CPU::push(DWORD val) {
 
 void CPU::push(QWORD val) {
 	// check for stack overflow
-	if (SP - sizeof(val) > STACK_END) {
+	if (SP - sizeof(val) > STACK_END + 1) {
 		// stack overflow
 		stringstream msg;
 		msg << "Stack overflow on PC 0x" << hex << PC;
@@ -286,7 +286,7 @@ void CPU::push(QWORD val) {
 
 void CPU::pop(WORD& to) {
 	// check for stack underflow
-	if (SP + sizeof(to) > STACK_END) {
+	if (SP + sizeof(to) > STACK_END + 1) {
 		// stack underflow
 		stringstream msg;
 		msg << "Stack underflow on PC 0x" << hex << PC;
@@ -299,7 +299,7 @@ void CPU::pop(WORD& to) {
 
 void CPU::pop(DWORD& to) {
 	// check for stack underflow
-	if (SP + sizeof(to) > STACK_END) {
+	if (SP + sizeof(to) > STACK_END + 1) {
 		// stack underflow
 		stringstream msg;
 		msg << "Stack underflow on PC 0x" << hex << PC;
@@ -312,7 +312,7 @@ void CPU::pop(DWORD& to) {
 
 void CPU::pop(QWORD& to) {
 	// check for stack underflow
-	if (SP + sizeof(to) > STACK_END) {
+	if (SP + sizeof(to) > STACK_END + 1) {
 		// stack underflow
 		stringstream msg;
 		msg << "Stack underflow on PC 0x" << hex << PC;
@@ -796,6 +796,7 @@ void CPU::executeInstruction() {
 			break;
 		}
 		// push PC
+		PC++;
 		push(PC);
 		// push BP
 		push(BP);
@@ -808,6 +809,7 @@ void CPU::executeInstruction() {
 		SP = BP;
 		pop(BP);
 		pop(PC);
+		break;
 		// stack functions
 	case op::PUSH:
 		push(*(getReg(IR >> 8)));
