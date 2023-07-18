@@ -13,11 +13,6 @@
   * 6 : PC -> 16bit unsigned address
   * 7 : SP -> 16bit unsigned address
   * 8 : BP -> 16bit unsigned address
-* The flags are set based on the result of arithmetic operations.
-  * If the result is 0, the zero flag (ZF) is set.
-  * If the sign bit is set, the sign flag (SF) is set.
-  * If the result has a signed overflow, the overflow flag (OF) is set.
-  * If the result has a carry out, the carry flag (CF) is set.
 
 ## Instructions:
 
