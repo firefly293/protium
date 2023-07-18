@@ -22,7 +22,7 @@
 ## Instructions:
 
 ### CPU FUNCTIONS
-```
+```c++
 0x00 : hlt // stops the cycles by setting HF flag
 
 0x01 : nop // skips a cycle
