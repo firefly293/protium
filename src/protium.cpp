@@ -1142,7 +1142,7 @@ void CPU::StoreProgram(WORD ptr, BYTE* program, WORD size) {
 }
 
 void CPU::SetStartingPoint(WORD startingPoint) {
-	if (startingPoint < PRGM_MEM_START || startingPoint > PRGM_MEM_END) {
+	if (startingPoint < PRGM_MEM_START || startingPoint > PRGM_MEM_END - 8) {
 		// is out of range
 		stringstream msg;
 		msg << "Invalid starting point 0x" << hex << startingPoint << ", must be from 0x5000 - 0x7FFF";
