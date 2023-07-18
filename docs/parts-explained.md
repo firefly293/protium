@@ -12,3 +12,11 @@ This CPU has 9 accesible registers:<br>
 * **6. PC : Program Counter:** The PC register holds the address of the next instruction to be executed. During instrucutes like `jmp` and `call`, the PC is updated in order to jump to the target location. <br>
 * **7. SP : Stack Pointer:** The SP register holds the address of the last thing pushed onto the stack. When something is pushed onto the stack, the stack pointer is decremented and the value is put at SP. When a value is popped from the stack, the stack pointer is incremented. <br>
 * **8. BP : Base Pointer:** This register holds the address of the current stack frame. It is used to refer to parameters and local variables in a subroutine. <br>
+
+## Flags
+Flags are bits within the flag byte that are set depending on conditions. This CPU has five flags:
+1. **HF (Halt Flag):** If this flag is set, which is done using the `hlt` instruction, the CPU will stop running.
+2. **ZF (Zero Flag):** This flag is set when the result of an arithmetic operation is 0.
+3. **SF (Sign Flag):** This flag is set when the sign bit of the result is set.
+4. **CF (Carry Flag):** This flag is set when there is a carry out during addition or subtraction.
+5. **OF (Overflow Flag):** This flag is set when there is a signed overflow during addition or subtraction.
