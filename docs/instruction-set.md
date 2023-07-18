@@ -1,6 +1,6 @@
 # Instruction set for the Protium CPU
 
-## Notes
+## Notes:
 * All values within instructions are stored in little-endian format, meaning their least significant byte goes first.
   * For example, the number `0x503A` would be written in an instruction as `0x3A50`, or `0x3A, 0x50`.
 * To specify a register, you use its corresponding identification number:
