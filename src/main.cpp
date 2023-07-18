@@ -6,7 +6,7 @@ int main() {
 	CPU protium;
 
 	// does factorial
-	BYTE program[] = {
+	BYTE factorialProgram[] = {
 		// main
 		CPU::op::ININT, CPU::regID::A, // input number to A
 		CPU::op::SETDST, 0x09, 0x50, // setdst to factorial subroutine at 0x5009
@@ -26,7 +26,7 @@ int main() {
 		CPU::op::RET // returns from subroutine, answer is stored in A
 	};
 
-	protium.StoreProgram(0x5000, program, sizeof(program));
+	protium.StoreProgram(0x5000, factorialProgram, sizeof(factorialProgram));
 	protium.SetStartingPoint(0x5000);
 	protium.Start();
 }
