@@ -1,5 +1,25 @@
 # Instruction set for the Protium CPU
 
+## Notes
+* All values within instructions are stored in little-endian format, meaning their least significant byte goes first.
+  * For example, the number `0x503A` would be written in the instruction set as `0x3A50`, or `0x3A, 0x50`.
+* To specify a register, you use its corresponding identification number:
+  * 0 : _ -> zero register
+  * 1 : A -> 16bit signed general-purpose
+  * 2 : B -> 16bit signed general-purpose
+  * 3 : C -> 16bit signed general-purpose
+  * 4 : SRC -> 16bit unsigned address
+  * 5 : DST -> 16bit unsigned address
+  * 6 : PC -> 16bit unsigned address
+  * 7 : SP -> 16bit unsigned address
+  * 8 : BP -> 16bit unsigned address
+* The flags are set based on the result of arithmetic operations.
+  * If the result is 0, the zero flag (ZF) is set.
+  * If the sign bit is set, the sign flag (SF) is set.
+  * If the result has a signed overflow, the overflow flag (OF) is set.
+  * If the result has a carry out, the carry flag (CF) is set.
+  
+
 ### CPU FUNCTIONS
 ```
 0x00 : hlt // stops the cycles by setting H flag
@@ -28,9 +48,9 @@
 ```
 ### MEMORY FUNCTIONS
 ```
-0x10 : clr [amountbyte1] [amountbyte2] // clears amount bytes from dst in RAM
+0x10 : clr [amountbyte1] [amountbyte2] // clears amount bytes from dst in memory
 
-0x11 : cp [amountbyte1] [amountbyte2] // copies amount bytes from src to dst in RAM
+0x11 : cp [amountbyte1] [amountbyte2] // copies amount bytes from src to dst in memory
 
 0x12 : lda // loads from src into reg A
 
