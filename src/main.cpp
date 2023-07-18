@@ -44,7 +44,7 @@ int main() {
 		CPU::op::HLT // halt
 	};
 
-	protium.StoreProgram(0x5000, testOverflowProgram, sizeof(testOverflowProgram));
+	protium.StoreProgram(0x5000, factorialProgram, sizeof(factorialProgram));
 	protium.SetStartingPoint(0x5000);
 	protium.Start();
 }
