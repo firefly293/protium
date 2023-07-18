@@ -12,11 +12,15 @@ This CPU has 9 accesible registers:<br>
 * **6. PC : Program Counter:** The PC register holds the address of the next instruction to be executed. During instrucutes like `jmp` and `call`, the PC is updated in order to jump to the target location. <br>
 * **7. SP : Stack Pointer:** The SP register holds the address of the last thing pushed onto the stack. When something is pushed onto the stack, the stack pointer is decremented and the value is put at SP. When a value is popped from the stack, the stack pointer is incremented. <br>
 * **8. BP : Base Pointer:** This register holds the address of the current stack frame. It is used to refer to parameters and local variables in a subroutine. <br>
+* **Extra Registers:** The first extra register is the 64 bit instruction register. This register contains the instruction currently being executed. The second extra register is the allocation register. This contains the address of the first location on the heap that hasn't been allocated.
 
-## Flags
+## 2. Flags
 Flags are bits within the flag byte that are set depending on conditions. This CPU has five flags:
 1. **HF (Halt Flag):** If this flag is set, which is done using the `hlt` instruction, the CPU will stop running.
 2. **ZF (Zero Flag):** This flag is set when the result of an arithmetic operation is 0.
 3. **SF (Sign Flag):** This flag is set when the sign bit of the result is set.
 4. **CF (Carry Flag):** This flag is set when there is a carry out during addition or subtraction.
 5. **OF (Overflow Flag):** This flag is set when there is a signed overflow during addition or subtraction.
+
+## 3. Stack
+The stack is a Last-In-First-Out (LIFO) data structure. To *push* to the stack means to append a value to it. To *pop* from the stack means to remove the last value from it. The stack is represented by a chunk of memory (in this case, `0x0000` to `0x0FFF`) for the stack. It is used for storing parameters and local variables, storing the PC and BP when calling a function, and storing the state of the CPU.
