@@ -2,7 +2,7 @@
 
 ## Notes
 * All values within instructions are stored in little-endian format, meaning their least significant byte goes first.
-  * For example, the number `0x503A` would be written in the instruction set as `0x3A50`, or `0x3A, 0x50`.
+  * For example, the number `0x503A` would be written in an instruction as `0x3A50`, or `0x3A, 0x50`.
 * To specify a register, you use its corresponding identification number:
   * 0 : _ -> zero register
   * 1 : A -> 16bit signed general-purpose
