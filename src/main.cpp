@@ -68,6 +68,12 @@ int main() {
 		CPU::op::HLT // end
 	};
 
+	cout << "HEXDUMP:\n";
+	for (BYTE b : guessingGameProgram) {
+		cout << hex << (int)b << ' ';
+	}
+	cout << endl;
+
 	protium.StoreProgram(0x5000, guessingGameProgram, sizeof(guessingGameProgram));
 	protium.SetStartingPoint(0x5000);
 	protium.Start();
