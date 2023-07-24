@@ -85,7 +85,6 @@ int main() {
 		CPU::op::CALL, // call factorial subroutine
 		CPU::op::POP, CPU::regID::B, // B now holds the stored value of A
 		CPU::op::MUL, CPU::regID::A, CPU::regID::A, CPU::regID::B, // a = a * b
-		CPU::op::RDUMP,
 		CPU::op::RET
 
 	};
