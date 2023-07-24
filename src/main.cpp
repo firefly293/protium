@@ -68,13 +68,35 @@ int main() {
 		CPU::op::HLT // end
 	};
 
+	BYTE recursiveFactorialProgram[] = {
+		CPU::op::ININT, CPU::regID::A, // input number into A
+		CPU::op::SETDST, 0x09, 0x50, // set dst to 0x5009, address of factorial subroutine
+		CPU::op::CALL, // call the factorial subroutine
+		CPU::op::OUTINT, CPU::regID::A, // result of factorial is stored in A, so output it
+		CPU::op::HLT, // halt at the end of main
+		// start of subroutine, A has the number to be factorialized
+		CPU::op::SETC, 0x02, 0x00, // set C to 2
+		CPU::op::CMP, CPU::regID::A, CPU::regID::C, // compare a and c (2)
+		CPU::op::JNSR, 0x09, 0x00, 0x00, 0x00, // if a >= 2, then jump to recursion part
+		CPU::op::SETA, 0x01, 0x00, // if a is < 2, set factorial result to 1
+		CPU::op::RET, // return
+		CPU::op::PUSH, CPU::regID::A, // push a to store it so that it can be multiplied by (a-1)!
+		CPU::op::DEC, CPU::regID::A, // decrement A
+		CPU::op::CALL, // call factorial subroutine
+		CPU::op::POP, CPU::regID::B, // B now holds the stored value of A
+		CPU::op::MUL, CPU::regID::A, CPU::regID::A, CPU::regID::B, // a = a * b
+		CPU::op::RDUMP,
+		CPU::op::RET
+
+	};
+
 	cout << "HEXDUMP:\n";
-	for (BYTE b : guessingGameProgram) {
-		cout << hex << (int)b << ' ';
+	for (BYTE b : recursiveFactorialProgram) {
+		cout << hex << (int)b << ' ' << dec;
 	}
 	cout << endl;
 
-	protium.StoreProgram(0x5000, guessingGameProgram, sizeof(guessingGameProgram));
+	protium.StoreProgram(0x5000, recursiveFactorialProgram, sizeof(recursiveFactorialProgram));
 	protium.SetStartingPoint(0x5000);
 	protium.Start();
 }

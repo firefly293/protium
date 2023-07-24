@@ -46,7 +46,7 @@ void CPU::sto(WORD ptr, BYTE& val) {
 		// get each byte in succession and put it in ptr + i
 		if (ptr + i >= SYS_MEM_START) { // make sure ptr is not out of bounds
 			stringstream msg;
-			msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << PC;
+			msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << PC << dec;
 			error(msg.str());
 			return;
 		}
@@ -60,7 +60,7 @@ void CPU::sto(WORD ptr, WORD& val) {
 		// get each byte in succession and put it in ptr + i
 		if (ptr + i >= SYS_MEM_START) { // make sure ptr is not out of bounds
 			stringstream msg;
-			msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << PC;
+			msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << PC << dec;
 			error(msg.str());
 			return;
 		}
@@ -74,7 +74,7 @@ void CPU::sto(WORD ptr, DWORD& val) {
 		// get each byte in succession and put it in ptr + i
 		if (ptr + i >= SYS_MEM_START) { // make sure ptr is not out of bounds
 			stringstream msg;
-			msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << PC;
+			msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << PC << dec;
 			error(msg.str());
 			return;
 		}
@@ -88,7 +88,7 @@ void CPU::sto(WORD ptr, QWORD& val) {
 		// get each byte in succession and put it in ptr + i
 		if (ptr + i >= SYS_MEM_START) { // make sure ptr is not out of bounds
 			stringstream msg;
-			msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << PC;
+			msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << PC << dec;
 			error(msg.str());
 			return;
 		}
@@ -102,7 +102,7 @@ void CPU::sto(WORD ptr, BYTE* buf, WORD size) {
 		// get each byte in succession and put it in ptr + i
 		if (ptr + i >= SYS_MEM_START) { // make sure ptr is not out of bounds
 			stringstream msg;
-			msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << PC;
+			msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << PC << dec;
 			error(msg.str());
 			return;
 		}
@@ -116,7 +116,7 @@ void CPU::stoSys(WORD ptr, BYTE& val) {
 		// get each byte in succession and put it in ptr + i
 		if (ptr + i >= NULLPTR) { // make sure ptr is not out of bounds
 			stringstream msg;
-			msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << PC;
+			msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << PC << dec;
 			error(msg.str());
 			return;
 		}
@@ -130,7 +130,7 @@ void CPU::stoSys(WORD ptr, WORD& val) {
 		// get each byte in succession and put it in ptr + i
 		if (ptr + i >= NULLPTR) { // make sure ptr is not out of bounds
 			stringstream msg;
-			msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << PC;
+			msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << PC << dec;
 			error(msg.str());
 			return;
 		}
@@ -144,7 +144,7 @@ void CPU::stoSys(WORD ptr, DWORD& val) {
 		// get each byte in succession and put it in ptr + i
 		if (ptr + i >= NULLPTR) { // make sure ptr is not out of bounds
 			stringstream msg;
-			msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << PC;
+			msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << PC << dec;
 			error(msg.str());
 			return;
 		}
@@ -158,7 +158,7 @@ void CPU::stoSys(WORD ptr, QWORD& val) {
 		// get each byte in succession and put it in ptr + i
 		if (ptr + i >= NULLPTR) { // make sure ptr is not out of bounds
 			stringstream msg;
-			msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << PC;
+			msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << PC << dec;
 			error(msg.str());
 			return;
 		}
@@ -172,7 +172,7 @@ void CPU::stoSys(WORD ptr, BYTE* buf, WORD size) {
 		// get each byte in succession and put it in ptr + i
 		if (ptr + i >= NULLPTR) { // make sure ptr is not out of bounds
 			stringstream msg;
-			msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << PC;
+			msg << "Attempted to write to 0x" << hex << ptr + i << " on PC 0x" << hex << PC << dec;
 			error(msg.str());
 			return;
 		}
@@ -184,7 +184,7 @@ void CPU::load(WORD ptr, BYTE& to) {
 	for (int i = 0; i < sizeof(to); i++) {
 		if (ptr + i >= NULLPTR) { // make sure ptr is not out of bounds
 			stringstream msg;
-			msg << "Attempted to read from 0x" << hex << ptr + i << " on PC 0x" << hex << PC;
+			msg << "Attempted to read from 0x" << hex << ptr + i << " on PC 0x" << hex << PC << dec;
 			error(msg.str());
 			return;
 		}
@@ -197,7 +197,7 @@ void CPU::load(WORD ptr, WORD& to) {
 	for (int i = 0; i < sizeof(to); i++) {
 		if (ptr + i >= NULLPTR) { // make sure ptr is not out of bounds
 			stringstream msg;
-			msg << "Attempted to read from 0x" << hex << ptr + i << " on PC 0x" << hex << PC;
+			msg << "Attempted to read from 0x" << hex << ptr + i << " on PC 0x" << hex << PC << dec;
 			error(msg.str());
 			return;
 		}
@@ -210,7 +210,7 @@ void CPU::load(WORD ptr, DWORD& to) {
 	for (int i = 0; i < sizeof(to); i++) {
 		if (ptr + i >= NULLPTR) { // make sure ptr is not out of bounds
 			stringstream msg;
-			msg << "Attempted to read from 0x" << hex << ptr + i << " on PC 0x" << hex << PC;
+			msg << "Attempted to read from 0x" << hex << ptr + i << " on PC 0x" << hex << PC << dec;
 			error(msg.str());
 			return;
 		}
@@ -223,7 +223,7 @@ void CPU::load(WORD ptr, QWORD& to) {
 	for (int i = 0; i < sizeof(to); i++) {
 		if (ptr + i >= NULLPTR) { // make sure ptr is not out of bounds
 			stringstream msg;
-			msg << "Attempted to read from 0x" << hex << ptr + i << " on PC 0x" << hex << PC;
+			msg << "Attempted to read from 0x" << hex << ptr + i << " on PC 0x" << hex << PC << dec;
 			error(msg.str());
 			return;
 		}
@@ -236,7 +236,7 @@ void CPU::load(WORD ptr, BYTE* buf, WORD size) {
 	for (int i = 0; i < size; i++) {
 		if (ptr + i >= NULLPTR) { // make sure ptr is not out of bounds
 			stringstream msg;
-			msg << "Attempted to read from 0x" << hex << ptr + i << " on PC 0x" << hex << PC;
+			msg << "Attempted to read from 0x" << hex << ptr + i << " on PC 0x" << hex << PC << dec;
 			error(msg.str());
 			return;
 		}
@@ -250,7 +250,7 @@ void CPU::push(WORD val) {
 	if (SP - sizeof(val) > STACK_END + 1) {
 		// stack overflow
 		stringstream msg;
-		msg << "Stack overflow on PC 0x" << hex << PC;
+		msg << "Stack overflow on PC 0x" << hex << PC << dec;
 		error(msg.str());
 		return;
 	}
@@ -263,7 +263,7 @@ void CPU::push(DWORD val) {
 	if (SP - sizeof(val) > STACK_END + 1) {
 		// stack overflow
 		stringstream msg;
-		msg << "Stack overflow on PC 0x" << hex << PC;
+		msg << "Stack overflow on PC 0x" << hex << PC << dec;
 		error(msg.str());
 		return;
 	}
@@ -276,7 +276,7 @@ void CPU::push(QWORD val) {
 	if (SP - sizeof(val) > STACK_END + 1) {
 		// stack overflow
 		stringstream msg;
-		msg << "Stack overflow on PC 0x" << hex << PC;
+		msg << "Stack overflow on PC 0x" << hex << PC << dec;
 		error(msg.str());
 		return;
 	}
@@ -289,7 +289,7 @@ void CPU::pop(WORD& to) {
 	if (SP + sizeof(to) > STACK_END + 1) {
 		// stack underflow
 		stringstream msg;
-		msg << "Stack underflow on PC 0x" << hex << PC;
+		msg << "Stack underflow on PC 0x" << hex << PC << dec;
 		error(msg.str());
 		return;
 	}
@@ -302,7 +302,7 @@ void CPU::pop(DWORD& to) {
 	if (SP + sizeof(to) > STACK_END + 1) {
 		// stack underflow
 		stringstream msg;
-		msg << "Stack underflow on PC 0x" << hex << PC;
+		msg << "Stack underflow on PC 0x" << hex << PC << dec;
 		error(msg.str());
 		return;
 	}
@@ -315,7 +315,7 @@ void CPU::pop(QWORD& to) {
 	if (SP + sizeof(to) > STACK_END + 1) {
 		// stack underflow
 		stringstream msg;
-		msg << "Stack underflow on PC 0x" << hex << PC;
+		msg << "Stack underflow on PC 0x" << hex << PC << dec;
 		error(msg.str());
 		return;
 	}
@@ -328,14 +328,14 @@ void CPU::cpy(WORD dst, WORD src, WORD size) {
 	// check for overflow
 	if (dst + size < dst || src + size < src) {
 		stringstream msg;
-		msg << "Overflow while copying from 0x" << hex << src << " to 0x" << hex << dst << " on PC 0x" << hex << PC;
+		msg << "Overflow while copying from 0x" << hex << src << " to 0x" << hex << dst << " on PC 0x" << hex << PC << dec;
 		error(msg.str());
 		return;
 	}
 	// check for copying into/from sys memory
 	if (dst + size >= SYS_MEM_START || src + size >= SYS_MEM_START) {
 		stringstream msg;
-		msg << "Attempted to copy from/into system memory on PC 0x" << hex << PC;
+		msg << "Attempted to copy from/into system memory on PC 0x" << hex << PC << dec;
 		error(msg.str());
 		return;
 	}
@@ -559,7 +559,7 @@ void CPU::executeInstruction() {
 	case op::JMP:
 		if (DST < PRGM_MEM_START || DST > PRGM_MEM_END - 8) {
 			stringstream msg;
-			msg << "Attempted to jump to invalid location 0x" << hex << DST;
+			msg << "Attempted to jump to invalid location 0x" << hex << DST << dec;
 			error(msg.str());
 			break;
 		}
@@ -568,7 +568,7 @@ void CPU::executeInstruction() {
 	case op::JIZ:
 		if (DST < PRGM_MEM_START || DST > PRGM_MEM_END - 8) {
 			stringstream msg;
-			msg << "Attempted to jump to invalid location 0x" << hex << DST;
+			msg << "Attempted to jump to invalid location 0x" << hex << DST << dec;
 			error(msg.str());
 			break;
 		}
@@ -578,7 +578,7 @@ void CPU::executeInstruction() {
 	case op::JNZ:
 		if (DST < PRGM_MEM_START || DST > PRGM_MEM_END - 8) {
 			stringstream msg;
-			msg << "Attempted to jump to invalid location 0x" << hex << DST;
+			msg << "Attempted to jump to invalid location 0x" << hex << DST << dec;
 			error(msg.str());
 			break;
 		}
@@ -588,7 +588,7 @@ void CPU::executeInstruction() {
 	case op::JIS:
 		if (DST < PRGM_MEM_START || DST > PRGM_MEM_END - 8) {
 			stringstream msg;
-			msg << "Attempted to jump to invalid location 0x" << hex << DST;
+			msg << "Attempted to jump to invalid location 0x" << hex << DST << dec;
 			error(msg.str());
 			break;
 		}
@@ -598,7 +598,7 @@ void CPU::executeInstruction() {
 	case op::JNS:
 		if (DST < PRGM_MEM_START || DST > PRGM_MEM_END - 8) {
 			stringstream msg;
-			msg << "Attempted to jump to invalid location 0x" << hex << DST;
+			msg << "Attempted to jump to invalid location 0x" << hex << DST << dec;
 			error(msg.str());
 			break;
 		}
@@ -608,7 +608,7 @@ void CPU::executeInstruction() {
 	case op::JIC:
 		if (DST < PRGM_MEM_START || DST > PRGM_MEM_END - 8) {
 			stringstream msg;
-			msg << "Attempted to jump to invalid location 0x" << hex << DST;
+			msg << "Attempted to jump to invalid location 0x" << hex << DST << dec;
 			error(msg.str());
 			break;
 		}
@@ -618,7 +618,7 @@ void CPU::executeInstruction() {
 	case op::JNC:
 		if (DST < PRGM_MEM_START || DST > PRGM_MEM_END - 8) {
 			stringstream msg;
-			msg << "Attempted to jump to invalid location 0x" << hex << DST;
+			msg << "Attempted to jump to invalid location 0x" << hex << DST << dec;
 			error(msg.str());
 			break;
 		}
@@ -628,7 +628,7 @@ void CPU::executeInstruction() {
 	case op::JIO:
 		if (DST < PRGM_MEM_START || DST > PRGM_MEM_END - 8) {
 			stringstream msg;
-			msg << "Attempted to jump to invalid location 0x" << hex << DST;
+			msg << "Attempted to jump to invalid location 0x" << hex << DST << dec;
 			error(msg.str());
 			break;
 		}
@@ -638,7 +638,7 @@ void CPU::executeInstruction() {
 	case op::JNO:
 		if (DST < PRGM_MEM_START || DST > PRGM_MEM_END - 8) {
 			stringstream msg;
-			msg << "Attempted to jump to invalid location 0x" << hex << DST;
+			msg << "Attempted to jump to invalid location 0x" << hex << DST << dec;
 			error(msg.str());
 			break;
 		}
@@ -650,7 +650,7 @@ void CPU::executeInstruction() {
 	WORD backward = (WORD)(IR >> 24);
 	if (PC + forward > PRGM_MEM_END - 8 || PC - backward < PRGM_MEM_START) {
 		stringstream msg;
-		msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward;
+		msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward << dec;
 		error(msg.str());
 		break;
 	}
@@ -663,7 +663,7 @@ void CPU::executeInstruction() {
 	WORD backward = (WORD)(IR >> 24);
 	if (PC + forward > PRGM_MEM_END - 8 || PC - backward < PRGM_MEM_START) {
 		stringstream msg;
-		msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward;
+		msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward << dec;
 		error(msg.str());
 		break;
 	}
@@ -679,7 +679,7 @@ void CPU::executeInstruction() {
 	WORD backward = (WORD)(IR >> 24);
 	if (PC + forward > PRGM_MEM_END - 8 || PC - backward < PRGM_MEM_START) {
 		stringstream msg;
-		msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward;
+		msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward << dec;
 		error(msg.str());
 		break;
 	}
@@ -695,7 +695,7 @@ void CPU::executeInstruction() {
 	WORD backward = (WORD)(IR >> 24);
 	if (PC + forward > PRGM_MEM_END - 8 || PC - backward < PRGM_MEM_START) {
 		stringstream msg;
-		msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward;
+		msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward << dec;
 		error(msg.str());
 		break;
 	}
@@ -711,7 +711,7 @@ void CPU::executeInstruction() {
 	WORD backward = (WORD)(IR >> 24);
 	if (PC + forward > PRGM_MEM_END - 8 || PC - backward < PRGM_MEM_START) {
 		stringstream msg;
-		msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward;
+		msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward << dec;
 		error(msg.str());
 		break;
 	}
@@ -727,7 +727,7 @@ void CPU::executeInstruction() {
 	WORD backward = (WORD)(IR >> 24);
 	if (PC + forward > PRGM_MEM_END - 8 || PC - backward < PRGM_MEM_START) {
 		stringstream msg;
-		msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward;
+		msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward << dec;
 		error(msg.str());
 		break;
 	}
@@ -743,7 +743,7 @@ void CPU::executeInstruction() {
 	WORD backward = (WORD)(IR >> 24);
 	if (PC + forward > PRGM_MEM_END - 8 || PC - backward < PRGM_MEM_START) {
 		stringstream msg;
-		msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward;
+		msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward << dec;
 		error(msg.str());
 		break;
 	}
@@ -759,7 +759,7 @@ void CPU::executeInstruction() {
 	WORD backward = (WORD)(IR >> 24);
 	if (PC + forward > PRGM_MEM_END - 8 || PC - backward < PRGM_MEM_START) {
 		stringstream msg;
-		msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward;
+		msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward << dec;
 		error(msg.str());
 		break;
 	}
@@ -775,7 +775,7 @@ void CPU::executeInstruction() {
 	WORD backward = (WORD)(IR >> 24);
 	if (PC + forward > PRGM_MEM_END - 8 || PC - backward < PRGM_MEM_START) {
 		stringstream msg;
-		msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward;
+		msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward << dec;
 		error(msg.str());
 		break;
 	}
@@ -791,7 +791,7 @@ void CPU::executeInstruction() {
 		// make sure DST is within bounds
 		if (DST < PRGM_MEM_START || DST > PRGM_MEM_END - 8) {
 			stringstream msg;
-			msg << "Attemped to call invalid location 0x" << hex << DST;
+			msg << "Attemped to call invalid location 0x" << hex << DST << dec;
 			error(msg.str());
 			break;
 		}
@@ -828,7 +828,7 @@ void CPU::executeInstruction() {
 		// check for enough space/overflow
 		if (AR + *(getReg(IR >> 8)) - 1 > HEAP_END || AR + *(getReg(IR >> 8)) - 1 < AR) {
 			stringstream msg;
-			msg << "Ran out of space on heap on PC 0x" << hex << PC;
+			msg << "Ran out of space on heap on PC 0x" << hex << PC << dec;
 			error(msg.str());
 			break;
 		}
@@ -1035,7 +1035,7 @@ void CPU::executeInstruction() {
 		for (int i = 0; i < amount; i++) {
 			if (DST + i >= SYS_MEM_START) {
 				stringstream msg;
-				msg << "Attempted to input to memory location 0x" << hex << DST + i;
+				msg << "Attempted to input to memory location 0x" << hex << DST + i << dec;
 				error(msg.str());
 				break;
 			}
@@ -1064,7 +1064,7 @@ void CPU::executeInstruction() {
 		for (int i = 0; i < amount; i++) {
 			if (SRC + i >= SYS_MEM_START) {
 				stringstream msg;
-				msg << "Attempted to output from memory location 0x" << hex << SRC + i;
+				msg << "Attempted to output from memory location 0x" << hex << SRC + i << dec;
 				error(msg.str());
 				break;
 			}
@@ -1075,20 +1075,20 @@ void CPU::executeInstruction() {
 		break;
 		// debugging functions
 	case op::RDUMP:
-		cout << "\nREGISTERS:\nA: " << A;
-		cout << "\nB: " << B;
-		cout << "\nC: " << C;
-		cout << "\nSRC: 0x" << hex << SRC;
-		cout << "\nDST: 0x" << hex << DST;
-		cout << "\nPC: 0x" << hex << PC;
-		cout << "\nSP: 0x" << hex << SP;
-		cout << "\nBP: 0x" << hex << BP << "\n";
+		cout << "\nREGISTERS:\nA: " << A << dec;
+		cout << "\nB: " << B << dec;
+		cout << "\nC: " << C << dec;
+		cout << "\nSRC: 0x" << hex << SRC << dec;
+		cout << "\nDST: 0x" << hex << DST << dec;
+		cout << "\nPC: 0x" << hex << PC << dec;
+		cout << "\nSP: 0x" << hex << SP << dec;
+		cout << "\nBP: 0x" << hex << BP << "\n" << dec;
 		PC++;
 		break;
 	case op::SDUMP:
 		cout << "\nSTACK:\n";
 		for (int i = 0xFFE; i >= SP; i -= 2) {
-			cout << hex << mem[i + 1] << ' ' << hex << mem[i] << '\n';
+			cout << hex << mem[i + 1] << ' ' << hex << mem[i] << '\n' << dec;
 		}
 		PC++;
 		break;
@@ -1133,7 +1133,7 @@ void CPU::StoreProgram(WORD ptr, BYTE* program, WORD size) {
 		if (ptr + i < PRGM_MEM_START || ptr + i > PRGM_MEM_END) {
 			// is out of range
 			stringstream msg;
-			msg << "Attempted to write program to 0x" << hex << ptr + i;
+			msg << "Attempted to write program to 0x" << hex << ptr + i << dec;
 			error(msg.str());
 			return;
 		}
@@ -1145,7 +1145,7 @@ void CPU::SetStartingPoint(WORD startingPoint) {
 	if (startingPoint < PRGM_MEM_START || startingPoint > PRGM_MEM_END - 8) {
 		// is out of range
 		stringstream msg;
-		msg << "Invalid starting point 0x" << hex << startingPoint << ", must be from 0x5000 - 0x7FFF";
+		msg << "Invalid starting point 0x" << hex << startingPoint << ", must be from 0x5000 - 0x7FFF" << dec;
 		error(msg.str());
 		return;
 	}
@@ -1196,7 +1196,7 @@ void CPU::Start() {
 		// load instruction register
 		if (PC < PRGM_MEM_START || PC > PRGM_MEM_END || PC > PRGM_MEM_END - 8) {
 			stringstream msg;
-			msg << "Invalid PC at 0x" << hex << PC;
+			msg << "Invalid PC at 0x" << hex << PC << dec;
 			error(msg.str());
 			continue;
 		}
