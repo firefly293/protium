@@ -190,7 +190,7 @@
 
 0x60 : bnot [dstreg] [reg] // boolean nots reg1 and puts result in dstreg
 ```
-### Input/output
+### Input/output functions
 ```php
 0x61 : inint [reg] // gets next integer value from input stream and puts it in reg
 
