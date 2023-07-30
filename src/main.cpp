@@ -16,10 +16,10 @@ int main() {
 		// start of factorial subroutine
 		CPU::op::MOV, CPU::regID::B, CPU::regID::A, // copy a into b
 		CPU::op::DEC, CPU::regID::B, // b will be what a is multiplyed by each loop
-		CPU::op::SETC, 0x01, 0x00, // c is now 1
+		CPU::op::SETC, 0x02, 0x00, // c is now 1
 		// start of loop
 		CPU::op::CMP, CPU::regID::B, CPU::regID::C, // compare B with 1
-		CPU::op::JIZR, 0x10, 0x00, 0x00, 0x00, // jump out of loop if B is 1
+		CPU::op::JISR, 0x10, 0x00, 0x00, 0x00, // jump out of loop if B < 2
 		CPU::op::MUL, CPU::regID::A, CPU::regID::A, CPU::regID::B, // a = a * b
 		CPU::op::DEC, CPU::regID::B, // decrement B
 		CPU::op::JMPR, 0x00, 0x00, 0x0E, 0x00, // jump 14 bytes backwards
@@ -69,13 +69,13 @@ int main() {
 	};
 
 	BYTE recursiveFactorialProgram[] = {
+		CPU::op::SETC, 0x02, 0x00, // set C to 2
 		CPU::op::ININT, CPU::regID::A, // input number into A
-		CPU::op::SETDST, 0x09, 0x50, // set dst to 0x5009, address of factorial subroutine
+		CPU::op::SETDST, 0x0C, 0x50, // set dst to 0x500C, address of factorial subroutine
 		CPU::op::CALL, // call the factorial subroutine
 		CPU::op::OUTINT, CPU::regID::A, // result of factorial is stored in A, so output it
 		CPU::op::HLT, // halt at the end of main
 		// start of subroutine, A has the number to be factorialized
-		CPU::op::SETC, 0x02, 0x00, // set C to 2
 		CPU::op::CMP, CPU::regID::A, CPU::regID::C, // compare a and c (2)
 		CPU::op::JNSR, 0x09, 0x00, 0x00, 0x00, // if a >= 2, then jump to recursion part
 		CPU::op::SETA, 0x01, 0x00, // if a is < 2, set factorial result to 1
@@ -90,12 +90,12 @@ int main() {
 	};
 
 	cout << "HEXDUMP:\n";
-	for (BYTE b : recursiveFactorialProgram) {
+	for (BYTE b : factorialProgram) {
 		cout << hex << (int)b << ' ' << dec;
 	}
 	cout << endl;
 
-	protium.StoreProgram(0x5000, recursiveFactorialProgram, sizeof(recursiveFactorialProgram));
+	protium.StoreProgram(0x5000, factorialProgram, sizeof(factorialProgram));
 	protium.SetStartingPoint(0x5000);
 	protium.Start();
 }
