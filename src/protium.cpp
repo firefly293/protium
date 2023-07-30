@@ -355,6 +355,39 @@ WORD* CPU::getReg(BYTE id) {
 
 }
 
+void CPU::jmp(bool condition) {
+	if (condition) {
+		if (DST < PRGM_MEM_START || DST > PRGM_MEM_END - 8) {
+			stringstream msg;
+			msg << "Attempted to jump to invalid location 0x" << hex << DST << dec;
+			error(msg.str());
+			return;
+		}
+		PC = DST;
+	}
+	else {
+		PC++;
+	}
+}
+
+void CPU::jmpr(bool condition) {
+	if (condition) {
+		WORD forward = (WORD)(IR >> 8);
+		WORD backward = (WORD)(IR >> 24);
+		if (PC + forward > PRGM_MEM_END - 8 || PC - backward < PRGM_MEM_START) {
+			stringstream msg;
+			msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward << dec;
+			error(msg.str());
+			return;
+		}
+		PC += forward;
+		PC -= backward;
+	}
+	else {
+		PC += 5;
+	}
+}
+
 void CPU::updateFlags(WORD a, WORD b, WORD result) {
 	flags = 0;
 	// update 0 and sign
@@ -386,7 +419,7 @@ void CPU::executeInstruction() {
 	BYTE opcode = IR & 0xFF; // extract lowest byte of IR for opcode
 
 	switch (opcode) {
-		// CPU functions
+	// CPU functions
 	case op::HLT:
 		setFlag(FLAGS::HF);
 		PC++;
@@ -395,7 +428,7 @@ void CPU::executeInstruction() {
 		PC++;
 		return;
 		break;
-		// flag functions
+	// flag functions
 	case op::CLRF:
 		flags = 0;
 		PC++;
@@ -432,7 +465,7 @@ void CPU::executeInstruction() {
 		unsetFlag(FLAGS::OF);
 		PC++;
 		break;
-		// memory functions
+	// memory functions
 	case op::CLR:
 		for (int i = 0; i < (WORD)(IR >> 8); i++) { // IR >> 8 is amount
 			if (DST + i >= SYS_MEM_START) break;
@@ -441,7 +474,7 @@ void CPU::executeInstruction() {
 		PC += 3;
 		break;
 	case op::CP:
-		cpy(DST, SRC, (WORD)(IR >> 8));
+		cpy(DST, SRC, (WORD)(IR >> 8)); // cpy function takes care of error handling
 		PC += 3;
 		break;
 	case op::LDA:
@@ -468,13 +501,15 @@ void CPU::executeInstruction() {
 		sto(DST, C);
 		PC++;
 		break;
-		// general register functions
+	// general register functions
 	case op::MOV:
-	{WORD* dstreg = getReg(IR >> 8);
-	WORD* srcreg = getReg(IR >> 16);
-	*dstreg = *srcreg; }
-	PC += 3;
-	break;
+	{
+		WORD* dstreg = getReg(IR >> 8);
+		WORD* srcreg = getReg(IR >> 16);
+		*dstreg = *srcreg; 
+	}
+		PC += 3;
+		break;
 	case op::CLRA:
 		A = 0;
 		PC++;
@@ -515,15 +550,16 @@ void CPU::executeInstruction() {
 		PC += 6;
 		break;
 	case op::SWAP:
-	{WORD* reg1 = getReg(IR >> 8);
-	WORD* reg2 = getReg(IR >> 16);
-	WORD tmp;
-	tmp = *reg1;
-	*reg1 = *reg2;
-	*reg2 = tmp;
+	{
+		WORD* reg1 = getReg(IR >> 8);
+		WORD* reg2 = getReg(IR >> 16);
+		WORD tmp;
+		tmp = *reg1;
+		*reg1 = *reg2;
+		*reg2 = tmp;
 	}
-	PC += 3;
-	break;
+		PC += 3;
+		break;
 	// address specific register functions
 	case op::LDSRC:
 		load((WORD)(IR >> 8), SRC);
@@ -550,242 +586,67 @@ void CPU::executeInstruction() {
 		PC += 3;
 		break;
 	case op::CMP:
-	{WORD* reg1 = getReg(IR >> 8);
-	WORD* reg2 = getReg(IR >> 16);
-	updateFlags(*reg1, -(*reg2), *reg1 - *reg2);
+	{
+		WORD* reg1 = getReg(IR >> 8);
+		WORD* reg2 = getReg(IR >> 16);
+		updateFlags(*reg1, -(*reg2), *reg1 - *reg2);
 	}
-	PC += 3;
-	break;
+		PC += 3;
+		break;
 	case op::JMP:
-		if (DST < PRGM_MEM_START || DST > PRGM_MEM_END - 8) {
-			stringstream msg;
-			msg << "Attempted to jump to invalid location 0x" << hex << DST << dec;
-			error(msg.str());
-			break;
-		}
-		PC = DST;
+		jmp(true);
 		break;
 	case op::JIZ:
-		if (DST < PRGM_MEM_START || DST > PRGM_MEM_END - 8) {
-			stringstream msg;
-			msg << "Attempted to jump to invalid location 0x" << hex << DST << dec;
-			error(msg.str());
-			break;
-		}
-		if (checkFlag(ZF)) PC = DST;
-		else PC++;
+		jmp(checkFlag(ZF));
 		break;
 	case op::JNZ:
-		if (DST < PRGM_MEM_START || DST > PRGM_MEM_END - 8) {
-			stringstream msg;
-			msg << "Attempted to jump to invalid location 0x" << hex << DST << dec;
-			error(msg.str());
-			break;
-		}
-		if (!checkFlag(ZF)) PC = DST;
-		else PC++;
+		jmp(!checkFlag(ZF));
 		break;
 	case op::JIS:
-		if (DST < PRGM_MEM_START || DST > PRGM_MEM_END - 8) {
-			stringstream msg;
-			msg << "Attempted to jump to invalid location 0x" << hex << DST << dec;
-			error(msg.str());
-			break;
-		}
-		if (checkFlag(SF)) PC = DST;
-		else PC++;
+		jmp(checkFlag(SF));
 		break;
 	case op::JNS:
-		if (DST < PRGM_MEM_START || DST > PRGM_MEM_END - 8) {
-			stringstream msg;
-			msg << "Attempted to jump to invalid location 0x" << hex << DST << dec;
-			error(msg.str());
-			break;
-		}
-		if (!checkFlag(SF)) PC = DST;
-		else PC++;
+		jmp(!checkFlag(SF));
 		break;
 	case op::JIC:
-		if (DST < PRGM_MEM_START || DST > PRGM_MEM_END - 8) {
-			stringstream msg;
-			msg << "Attempted to jump to invalid location 0x" << hex << DST << dec;
-			error(msg.str());
-			break;
-		}
-		if (checkFlag(CF)) PC = DST;
-		else PC++;
+		jmp(checkFlag(CF));
 		break;
 	case op::JNC:
-		if (DST < PRGM_MEM_START || DST > PRGM_MEM_END - 8) {
-			stringstream msg;
-			msg << "Attempted to jump to invalid location 0x" << hex << DST << dec;
-			error(msg.str());
-			break;
-		}
-		if (!checkFlag(CF)) PC = DST;
-		else PC++;
+		jmp(!checkFlag(CF));
 		break;
 	case op::JIO:
-		if (DST < PRGM_MEM_START || DST > PRGM_MEM_END - 8) {
-			stringstream msg;
-			msg << "Attempted to jump to invalid location 0x" << hex << DST << dec;
-			error(msg.str());
-			break;
-		}
-		if (checkFlag(OF)) PC = DST;
-		else PC++;
+		jmp(checkFlag(OF));
 		break;
 	case op::JNO:
-		if (DST < PRGM_MEM_START || DST > PRGM_MEM_END - 8) {
-			stringstream msg;
-			msg << "Attempted to jump to invalid location 0x" << hex << DST << dec;
-			error(msg.str());
-			break;
-		}
-		if (!checkFlag(OF)) PC = DST;
-		else PC++;
+		jmp(!checkFlag(OF));
 		break;
 	case op::JMPR:
-	{WORD forward = (WORD)(IR >> 8);
-	WORD backward = (WORD)(IR >> 24);
-	if (PC + forward > PRGM_MEM_END - 8 || PC - backward < PRGM_MEM_START) {
-		stringstream msg;
-		msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward << dec;
-		error(msg.str());
+		jmpr(true);
 		break;
-	}
-	PC += forward;
-	PC -= backward;
-	}
-	break;
 	case op::JIZR:
-	{WORD forward = (WORD)(IR >> 8);
-	WORD backward = (WORD)(IR >> 24);
-	if (PC + forward > PRGM_MEM_END - 8 || PC - backward < PRGM_MEM_START) {
-		stringstream msg;
-		msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward << dec;
-		error(msg.str());
+		jmpr(checkFlag(ZF));
 		break;
-	}
-	if (checkFlag(ZF)) {
-		PC += forward;
-		PC -= backward;
-	}
-	else PC += 5;
-	}
-	break;
 	case op::JNZR:
-	{WORD forward = (WORD)(IR >> 8);
-	WORD backward = (WORD)(IR >> 24);
-	if (PC + forward > PRGM_MEM_END - 8 || PC - backward < PRGM_MEM_START) {
-		stringstream msg;
-		msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward << dec;
-		error(msg.str());
+		jmpr(!checkFlag(ZF));
 		break;
-	}
-	if (!checkFlag(ZF)) {
-		PC += forward;
-		PC -= backward;
-	}
-	else PC += 5;
-	}
-	break;
 	case op::JISR:
-	{WORD forward = (WORD)(IR >> 8);
-	WORD backward = (WORD)(IR >> 24);
-	if (PC + forward > PRGM_MEM_END - 8 || PC - backward < PRGM_MEM_START) {
-		stringstream msg;
-		msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward << dec;
-		error(msg.str());
+		jmpr(checkFlag(SF));
 		break;
-	}
-	if (checkFlag(SF)) {
-		PC += forward;
-		PC -= backward;
-	}
-	else PC += 5;
-	}
-	break;
 	case op::JNSR:
-	{WORD forward = (WORD)(IR >> 8);
-	WORD backward = (WORD)(IR >> 24);
-	if (PC + forward > PRGM_MEM_END - 8 || PC - backward < PRGM_MEM_START) {
-		stringstream msg;
-		msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward << dec;
-		error(msg.str());
+		jmpr(!checkFlag(SF));
 		break;
-	}
-	if (!checkFlag(SF)) {
-		PC += forward;
-		PC -= backward;
-	}
-	else PC += 5;
-	}
-	break;
 	case op::JICR:
-	{WORD forward = (WORD)(IR >> 8);
-	WORD backward = (WORD)(IR >> 24);
-	if (PC + forward > PRGM_MEM_END - 8 || PC - backward < PRGM_MEM_START) {
-		stringstream msg;
-		msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward << dec;
-		error(msg.str());
+		jmpr(checkFlag(CF));
 		break;
-	}
-	if (checkFlag(CF)) {
-		PC += forward;
-		PC -= backward;
-	}
-	else PC += 5;
-	}
-	break;
 	case op::JNCR:
-	{WORD forward = (WORD)(IR >> 8);
-	WORD backward = (WORD)(IR >> 24);
-	if (PC + forward > PRGM_MEM_END - 8 || PC - backward < PRGM_MEM_START) {
-		stringstream msg;
-		msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward << dec;
-		error(msg.str());
+		jmpr(!checkFlag(CF));
 		break;
-	}
-	if (!checkFlag(CF)) {
-		PC += forward;
-		PC -= backward;
-	}
-	else PC += 5;
-	}
-	break;
 	case op::JIOR:
-	{WORD forward = (WORD)(IR >> 8);
-	WORD backward = (WORD)(IR >> 24);
-	if (PC + forward > PRGM_MEM_END - 8 || PC - backward < PRGM_MEM_START) {
-		stringstream msg;
-		msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward << dec;
-		error(msg.str());
+		jmpr(checkFlag(OF));
 		break;
-	}
-	if (checkFlag(OF)) {
-		PC += forward;
-		PC -= backward;
-	}
-	else PC += 5;
-	}
-	break;
 	case op::JNOR:
-	{WORD forward = (WORD)(IR >> 8);
-	WORD backward = (WORD)(IR >> 24);
-	if (PC + forward > PRGM_MEM_END - 8 || PC - backward < PRGM_MEM_START) {
-		stringstream msg;
-		msg << "Attempted to jump to invalid location 0x" << hex << PC + forward << " or 0x" << hex << PC - backward << dec;
-		error(msg.str());
+		jmpr(!checkFlag(OF));
 		break;
-	}
-	if (!checkFlag(OF)) {
-		PC += forward;
-		PC -= backward;
-	}
-	else PC += 5;
-	}
-	break;
 	// subroutine functions
 	case op::CALL:
 		// make sure DST is within bounds
@@ -810,7 +671,7 @@ void CPU::executeInstruction() {
 		pop(BP);
 		pop(PC);
 		break;
-		// stack functions
+	// stack functions
 	case op::PUSH:
 		push(*(getReg(IR >> 8)));
 		PC += 2;
@@ -823,7 +684,7 @@ void CPU::executeInstruction() {
 		load(SP, *(getReg(IR >> 8)));
 		PC += 2;
 		break;
-		// heap functions
+	// heap functions
 	case op::ALLOC:
 		// check for enough space/overflow
 		if (AR + *(getReg(IR >> 8)) - 1 > HEAP_END || AR + *(getReg(IR >> 8)) - 1 < AR) {
@@ -845,7 +706,7 @@ void CPU::executeInstruction() {
 			AR -= *(getReg(IR >> 8));
 		PC += 2;
 		break;
-		// arithmetic functions
+	// arithmetic functions
 	case op::ADD:
 		{
 		WORD* dstreg = getReg(IR >> 8);
@@ -1017,7 +878,7 @@ void CPU::executeInstruction() {
 		}
 		PC += 3;
 		break;
-		// i/o
+	// i/o
 	case op::ININT:
 		{
 		WORD* reg = getReg(IR >> 8);
@@ -1073,7 +934,7 @@ void CPU::executeInstruction() {
 		}
 		PC += 2;
 		break;
-		// debugging functions
+	// debugging functions
 	case op::RDUMP:
 		cout << "\nREGISTERS:\nA: " << A << dec;
 		cout << "\nB: " << B << dec;

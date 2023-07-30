@@ -205,6 +205,8 @@ private:
 	void pop(DWORD& to);
 	void pop(QWORD& to);
 	void cpy(WORD dst, WORD src, WORD size);
+	void jmp(bool condition);
+	void jmpr(bool condition);
 	WORD* getReg(BYTE id);
 	void updateFlags(WORD a, WORD b, WORD result);
 	void updateFlags(WORD result);
