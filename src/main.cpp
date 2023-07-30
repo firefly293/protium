@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include "protium.h"
 using namespace std;
 
@@ -90,12 +91,12 @@ int main() {
 	};
 
 	cout << "HEXDUMP:\n";
-	for (BYTE b : factorialProgram) {
-		cout << hex << (int)b << ' ' << dec;
+	for (BYTE b : recursiveFactorialProgram) {
+		cout << "0x" << hex << setw(2) << setfill('0') << (int)b << ' ' << dec;
 	}
 	cout << endl;
 
-	protium.StoreProgram(0x5000, factorialProgram, sizeof(factorialProgram));
+	protium.StoreProgram(0x5000, recursiveFactorialProgram, sizeof(recursiveFactorialProgram));
 	protium.SetStartingPoint(0x5000);
 	protium.Start();
 }
