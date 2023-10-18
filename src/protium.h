@@ -1,6 +1,9 @@
 #pragma once
 #define REGION
 
+
+#include <functional>
+
 using namespace std;
 
 // typedefs
@@ -12,6 +15,8 @@ typedef unsigned long long int QWORD;
 class CPU {
 	// special pointers
 private:
+	function<WORD(WORD)> expPorts[256] = {};
+
 	const WORD STACK_START = 0x0000;
 	const WORD STACK_END = 0x0FFF;
 	const WORD HEAP_START = 0x1000;
@@ -35,6 +40,9 @@ private:
 	QWORD IR; // instruction register
 	WORD AR; // allocation register
 	BYTE flags; // flags register
+
+	WORD EXPIN;
+	WORD EXPOUT;
 
 
 	QWORD clockTime;
@@ -183,6 +191,8 @@ private:
 	void unsetFlag(FLAGS flag);
 	bool checkFlag(FLAGS flag);
 
+	function<WORD(WORD)> blankExpPort;
+
 	void sto(WORD ptr, BYTE& val);
 	void sto(WORD ptr, WORD& val);
 	void sto(WORD ptr, DWORD& val);
@@ -213,12 +223,14 @@ private:
 	void updateSysRand();
 
 	void executeInstruction();
+	void executeCycle();
 
 	void error(string msg);
 
 public:
 	void StoreProgram(WORD ptr, BYTE* program, WORD size);
 	void SetStartingPoint(WORD startingPoint);
+	void PlugExpansionPort(BYTE expPos, function<WORD(WORD)> exp);
 	void Reset();
 	void Start();
 		

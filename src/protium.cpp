@@ -1,6 +1,7 @@
 #include <iostream>
 #include "protium.h"
 #include <sstream>
+#include <functional>
 //#ifdef _WIN32
 //#include <windows.h>
 //#else
@@ -29,6 +30,8 @@ void CPU::setFlag(FLAGS flag) {
 	}
 }
 
+
+
 void CPU::unsetFlag(FLAGS flag) {
 	if (flags & (1 << flag)) {
 		// flag is set
@@ -39,6 +42,12 @@ void CPU::unsetFlag(FLAGS flag) {
 bool CPU::checkFlag(FLAGS flag) {
 	return flags & (1 << flag);
 }
+
+//WORD CPU::blankExpPort(WORD in) {
+//	return in;
+//}
+
+function<WORD(WORD)> blankExpPort = [](WORD in) -> WORD { return in; };
 
 void CPU::sto(WORD ptr, BYTE& val) {
 			
@@ -970,6 +979,36 @@ void CPU::executeInstruction() {
 	}
 }
 
+void CPU::executeCycle() {
+	// update system variables
+	updateSysRand();
+	stoSys(0xF014, clockTime);
+	stoSys(0xF01C, sysRand);
+
+	// set _ to 0
+	_ = 0;
+
+	// load instruction register
+	if (PC < PRGM_MEM_START || PC > PRGM_MEM_END || PC > PRGM_MEM_END - 8) {
+		stringstream msg;
+		msg << "Invalid PC at 0x" << hex << PC << dec;
+		error(msg.str());
+		return;
+	}
+	load(PC, IR);
+
+	executeInstruction();
+
+	// expansion port logic
+	for (int i = 0; i < 256; i++)
+	{
+		EXPOUT = expPorts[i](EXPIN);
+	}
+
+
+	clockTime++;
+}
+
 #endif
 
 // non-CPU methods
@@ -1013,6 +1052,10 @@ void CPU::SetStartingPoint(WORD startingPoint) {
 	PC = startingPoint;
 }
 
+void CPU::PlugExpansionPort(BYTE expPos, function<WORD(WORD)> exp) {
+	expPorts[expPos] = exp;
+}
+
 void CPU::Reset() {
 	// init registers
 	A = B = C = 0;
@@ -1021,6 +1064,15 @@ void CPU::Reset() {
 	SP = BP = STACK_END + 1;
 	IR = 0;
 	AR = HEAP_START;
+
+	EXPIN = 0;
+	EXPOUT = 0;
+
+	// reset expansion ports
+	for (int i = 0; i < 256; i++)
+	{
+		expPorts[i] = blankExpPort;
+	}
 
 	// init system variables
 	srand(time(NULL));
@@ -1046,27 +1098,7 @@ void CPU::Reset() {
 
 void CPU::Start() {
 	while (!checkFlag(FLAGS::HF)) {
-		// update system variables
-		updateSysRand();
-		stoSys(0xF014, clockTime);
-		stoSys(0xF01C, sysRand);
-		
-		// set _ to 0
-		_ = 0;
-
-		// load instruction register
-		if (PC < PRGM_MEM_START || PC > PRGM_MEM_END || PC > PRGM_MEM_END - 8) {
-			stringstream msg;
-			msg << "Invalid PC at 0x" << hex << PC << dec;
-			error(msg.str());
-			continue;
-		}
-		load(PC, IR);
-
-		executeInstruction();
-
-		clockTime++;
-				
+		executeCycle();	
 	}
 }
 #endif
